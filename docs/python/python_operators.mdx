@@ -1,0 +1,158 @@
+---
+id: python_operators
+title: Python - Operators
+---
+## Types of Python Operators
+- Arithmetic Operators
+- Comparison (Relational) Operators
+- Assignment Operators
+- Logical Operators
+- Bitwise Operators
+- Membership Operators
+- Identity Operators
+
+## Python Arithmetic Operators
+Python Arithmetic operators are used to perform basic mathematical operations such as addition, subtraction, multiplication, etc
+assume that the values of a and b are 10 and 20, respectively
+
+| Operator |	Name |	Example |
+|----|----|----|
+| + |	Addition	| a + b = 30 |
+| -	| Subtraction	| a b = -10 | 
+|	*	|	Multiplication	|	a * b = 200 |	
+|	/	|	Division	|	 b / a = 2 |	
+|	 %	|	Modulus	|	b % a = 0 #It returns the remainder|	
+|	**	|	Exponent	|	a\**b =10**20|	
+|	//	|	Floor Division	|	9//2 = 4|
+```py 
+# the floating-point arithmetic somethings it will give extra values `ex:a= 0.1+0.2=0.3` but python gives 0.3000000988 this is not a issue so use round or math.isclose
+import math
+a = 0.1 + 0.2
+print(a)
+print(round(a, 2)) 
+print(math.isclose(a, 0.3))
+```
+---
+### Floor Division
+If both operands are positive, floor operator returns a number with fractional part removed from it. For example, the floor division of 9.8 by 2 returns 4 (pure division is 4.9, strip the fractional part, result is 4).
+
+But if one of the operands is negative, the result is rounded away from zero (towards negative infinity). Floor division of -9.8 by 2 returns 5 (pure division is -4.9, rounded away from 0).
+---
+## Python Comparison Operators
+Python Comparison operators compare the values on either side
+
+| Operator | Name                    | Example               |
+|----------|-------------------------|-----------------------|
+| `==`     | Equal                   | `(a == b)` is false   |
+| `!=`     | Not equal               | `(a != b)` is true   |
+| `>`      | Greater than            | `(a > b)` is false   |
+| `<`      | Less than               | `(a < b)` is true    |
+| `>=`     | Greater than or equal   | `(a >= b)` is false  |
+| `<=`     | Less than or equal      | `(a <= b)` is true   |
+
+## Python Assignment Operators
+Python Assignment operators are used to assign values to variables.
+|Operator	| Example |	Same As |
+|-----|-----|-----|
+| =	| a = 10	| a = 10 |
+| +=	| a += 30	| a = a + 30 |
+| -=	| a -= 15	| a = a - 15 |
+| *=	| a *= 10	| a = a * 10 |
+| /=	| a /= 5	| a = a / 5 |
+| %=	| a %= 5	| a = a % 5 |
+| **=	| a **= 4	| a = a ** 4 |
+| //=	| a //= 5	| a = a // 5 |
+| &=	| a &= 5	| a = a & 5 |
+| |=	| a |= 5	| a = a | 5 |
+| ^=	| a ^= 5	| a = a ^ 5 |
+| `>>=`	| `a >>= 5`	| `a = a >> 5` |
+| `<<=` |	`a <<= 5`	|  `a = a << 5 ` |
+
+## Python Logical Operators
+Python logical operators are used to combile two or more conditions and check the final result.
+Assume variable a holds 10 and variable b holds 20
+Operator	Name	Example
+and	AND	a and b
+or	OR	a or b
+not	NOT	not(a)
+### Logical "and" Operator Truth Table
+
+|a	|b	|a and b|
+|---|--|---|
+|F	|F	|F|
+|F	|T	|F|
+|T	|F	|F|
+|T	|T	|T|
+
+### Logical "or" Operator Truth Table
+|a	|b	|a or b|
+|---|--|---|
+|F	|F	|F|
+|F	|T	|T|
+|T	|F	|T|
+|T	|T	|T|
+## Python Membership Operators
+Python's membership operators test for membership in a sequence, such as strings, lists, or tuples.
+Operator	Description	Example
+in	Returns True if it finds a variable in the specified sequence, false otherwise.	a in b
+not in	returns True if it does not finds a variable in the specified sequence and false otherwise.	a not in b
+```py
+a = 10
+b = 20
+list = [1, 2, 3, 4, 5 ]
+
+print ("a:", a, "b:", b, "list:", list)
+
+if ( a in list ):
+   print ("a is present in the given list")
+```
+### Membership Operator with Lists and Tuples
+```py
+var = [10,20,30,40]
+a = 20
+b = 10
+c = a-b
+d = a/2
+print (a, "in", var, ":", a in var)
+print (b, "not in", var, ":", b not in var)
+print (c, "in", var, ":", c in var)
+print (d, "not in", var, ":", d not in var)
+```
+### Membership Operator with Sets
+```py
+var = {10,20,30,40}
+a = 10
+b = 20
+print (b, "in", var, ":", b in var)
+var = {(10,20),30,40}
+a = 10
+b = 20
+print ((a,b), "in", var, ":", (a,b) in var)
+```
+### Membership Operator with Dictionaries
+```py
+var = {1:10, 2:20, 3:30}
+a = 2
+b = 20
+print (a, "in", var, ":", a in var)
+print (b, "in", var, ":", b in var)
+```
+## Python Identity Operators
+Python identity operators compare the memory locations of two objects.
+
+Operator	Description	Example
+is	Returns True if both variables are the same object and false otherwise.	a is b
+is not	Returns True if both variables are not the same object and false otherwise.	a is not b
+
+```py
+a = [1, 2, 3, 4, 5]
+b = [1, 2, 3, 4, 5]
+c = a
+
+print(a is c) # Output True
+print(a is b) # Output False
+
+print(a is not c) # Output False
+print(a is not b) # Output True
+```
+

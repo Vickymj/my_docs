@@ -1,0 +1,211 @@
+---
+id: docusaurus-all-features-mdx
+title: Docusaurus MDX – Complete Documentation Template
+description: Complete MDX template covering all Docusaurus documentation features
+sidebar_position: 1
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import Admonition from '@theme/Admonition';
+
+# 📘 Docusaurus MDX – Complete Template
+
+This **MDX file** demonstrates **all features available in Docusaurus**.  
+Use it as a **master template** for documenting any technical skill.
+
+---
+
+## 🧾 Front Matter (Metadata)
+
+Controls routing, sidebar, SEO, and navigation.
+
+```md
+---
+id: example-id
+title: Example Title
+description: Example description
+sidebar_position: 1
+---
+```
+
+---
+
+## 📝 Text Formatting
+
+- **Bold**
+- *Italic*
+- ~~Strikethrough~~
+- `Inline code`
+
+> This is a blockquote example
+
+---
+
+## 📋 Lists
+
+### Unordered List
+- Item A
+- Item B
+  - Sub Item
+
+### Ordered List
+1. One
+2. Two
+3. Three
+
+---
+
+## 📊 Tables
+
+| Feature | Supported | Notes |
+|------|---------|------|
+| Markdown | Yes | Core |
+| MDX | Yes | React |
+| Tabs | Yes | MDX |
+| Admonitions | Yes | Built-in |
+
+---
+
+## 💡 Admonitions (Markdown Syntax)
+
+:::info
+This is an **info** admonition.
+:::
+
+:::tip
+This is a **tip** admonition (green).
+:::
+
+:::warning
+This is a **warning** admonition.
+:::
+
+:::danger
+This is a **danger** admonition.
+:::
+
+---
+
+## 🧩 Admonitions (React Component)
+
+<Admonition type="tip" title="MDX Tip">
+You can also use admonitions as **React components** inside MDX.
+</Admonition>
+
+---
+
+## 🧩 Expand / Collapse Section
+
+<details>
+<summary><strong>Click to expand</strong></summary>
+
+Hidden expandable content.
+
+```bash
+echo "Expandable content"
+```
+
+</details>
+
+---
+
+## 💻 Code Blocks
+
+```js title="example.js"
+console.log("Hello Docusaurus MDX");
+```
+
+### Highlight Lines
+
+```js {2,4}
+const a = 10;
+const b = 20;
+const sum = a + b;
+console.log(sum);
+```
+
+---
+
+## 🧪 Tabs Example (OS Based)
+
+<Tabs>
+<TabItem value="linux" label="Linux">
+
+```bash
+sudo apt install git
+```
+
+</TabItem>
+
+<TabItem value="windows" label="Windows">
+
+```powershell
+choco install git
+```
+
+</TabItem>
+
+<TabItem value="mac" label="MacOS">
+
+```bash
+brew install git
+```
+
+</TabItem>
+</Tabs>
+
+---
+
+## 🖼 Images
+
+```md
+![Alt Text](./img/example.png)
+```
+
+---
+
+## 🔗 Internal Links
+
+```md
+[Go to Git Docs](./git.mdx)
+```
+
+---
+
+## 🏗 Folder Structure
+
+```text
+docs/
+├── intro.mdx
+├── git/
+│   └── git.mdx
+├── docker/
+│   └── docker.mdx
+└── linux/
+    └── linux.mdx
+```
+
+---
+
+## 📌 Inline Highlights
+
+Use `git status` to check repository state.
+
+---
+
+## 🔐 Security Notice
+
+<Admonition type="warning" title="Security Warning">
+Never store secrets, passwords, or API keys in documentation.
+</Admonition>
+
+---
+
+## ✅ Summary
+
+✔ Covers **all Docusaurus MDX features**  
+✔ Supports Markdown + React  
+✔ Best for advanced documentation  
+
+🚀 Happy documenting with Docusaurus MDX!

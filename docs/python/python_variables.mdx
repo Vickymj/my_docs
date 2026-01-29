@@ -1,0 +1,85 @@
+---
+id: python_variables
+title: Python - Variables
+---
+## Python Variables - Naming Convention
+- A variable name must start with a letter or the underscore character
+- A variable name can only contain alpha-numeric characters and underscores (A-z, 0-9, and _ )
+
+:::info
+Python Naming Conversions
+- **Camel case** − First letter is a lowercase, but first letter of each subsequent word is in uppercase. For example: kmPerHour, pricePerLitre
+- **Pascal case** − First letter of each word is in uppercase. For example: KmPerHour, PricePerLitre
+- **Snake case** − Use single underscore (_) character to separate words. For example: km_per_hour, price_per_litre
+
+
+:::
+
+## Creating Python Variables
+A variable stores a piece of data and gives it a name
+```py 
+counter = 100          # Creates an integer variable
+miles   = 1000.0       # Creates a floating point variable
+name    = "Zara Ali"   # Creates a string variable
+is_it_thursday    = True  
+is_it_friday    = False  
+```
+## Deleting Python Variables
+```py
+del variable_name  # for single
+del variable_name1, variable_name2  # for multiple
+
+```
+
+## Getting Type of a Variable
+ data type of a Python variable using `type()`
+```py
+x = "Zara"
+y =  10
+z =  10.10
+
+print(type(x))
+print(type(y))
+print(type(z))
+```
+
+## Casting Python Variables
+```python
+x = str(10)    # x will be '10'
+y = int(10)    # y will be 10 
+z = float(10)  # z will be 10.0
+
+print( "x =", x )
+print( "y =", y )
+print( "z =", z )
+```
+## Python Variables - Multiple Assignment
+```py
+a=b=c=10
+a,b,c = 10,20,30
+a,b,c = 1,2,"Zara Ali"
+```
+
+## Python Local Variables
+Python Local Variables are defined inside a function. We can not access variable outside the function.
+```py
+def sum(x,y):
+   sum = x + y
+   return sum
+print(sum(5, 10))
+```
+Python Global Variables
+Any variable created outside a function can be accessed within any function and so they have global scope
+```py
+x = 5
+y = 10
+def sum():
+   sum = x + y
+   return sum
+print(sum())
+```
+## Constants in Python
+Python doesn't have any formally defined constants, However you can indicate a variable to be treated as a constant by using all-caps names with underscores. For example, the name PI_VALUE
+:::info
+The naming convention using all-caps is sometimes referred to as screaming snake case - where the all-caps (screaming) and the underscores (snakes).
+:::
