@@ -1,0 +1,31 @@
+fastapi
+pytest
+type hint
+linters
+aysnc
+sql
+redis
+kafka/rabbitmq
+docker
+kuber
+performance moni
+logging
+tracing
+sqlalchemy/django ORM
+aws/azure/gcp
+cicd github/jenkins
+
+
+good to have
+OWASP
+API Gateways
+serverless
+
+
+pip install pydantic-settings
+pip install passlib[bcrypt]
+pyjwt
+alembic
+
+alembic init -t asnc migrations
+pip install pytest-asyncio
