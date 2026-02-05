@@ -1,0 +1,166 @@
+---
+id: fastapi_basic
+title: FastAPI - Basic
+---
+
+installation
+uv add fastapi uvicorn/"uvicorn[standard]"
+
+
+in main.py add 
+```py
+from fastapi import FastAPI
+app = FastAPI()
+
+@app.get("/")
+def main():
+    return dict(name="Vicky", dep="IT")
+```
+to run 
+```bash
+uv run uvicorn main:app --reload #(main is the filename app ref `app`=FastAPI())
+```
+
+## routers
+
+├── api/                   # API routes grouped by version or feature
+│   ├── __init__.py
+│   ├── deps.py            # Common dependencies for API routes
+│   |── endpoints/
+│   |   |
+│   │   ├── __init__.py
+│   │   ├── users.py
+│   │   └── items.py
+│   └── router.py  
+
+
+
+--in users.py
+from fastapi import APIRouter
+
+router = APIRouter(prefix="users",tags=["users"]) # prefix in url:http://localhost:8000/users/ tags means grouping in 
+
+@router.get("/")
+def main():
+    return dict(user="vicky",dep="IT")
+
+
+
+
+--router.py 
+```py
+
+from fastapi import APIRouter
+from api.endpoints import users
+
+master_router = APIRouter()
+
+master_router.include_router(users.router)
+```
+
+
+in main.py
+```py
+@app.get("/")
+def main():
+    return dict(message="API")
+
+app.include_router(master_router)
+```
+## adding middleware
+```py main.py
+@app.middleware("http")
+async def custommiddleware(request: Request, call_next):
+    start = perf_counter()
+    response: Response  = await call_next(request)
+    end = perf_counter
+    timetaken = round((end-start),2)
+    response.headers['X-Time-Taken']= timetaken
+    return response
+
+
+## context manager decortor `setup before the app runs, cleanup when it stops` 
+
+```py
+from 
+@asynccontextmanager
+async def lifespan(app):
+    # startup code
+    yield
+    # shutdown code
+```
+app = FastAPI(lifespan=lifespan)
+FastAPI automatically calls it:
+
+once when the server starts
+
+once when the server stops
+```py
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+
+    async with engine.begin() as conn:
+        await conn.run_sync(models.Base.metadata.create_all)
+    yield
+    await engine.dispose()
+
+
+app = FastAPI(lifespan=lifespan)
+```│   │
+│   ├── models/                # ORM models (SQLAlchemy, Tortoise, etc.)
+│   │   ├── __init__.py
+│   │   ├── user.py
+│   │   └── item.py
+│   │
+│   ├── db/                    # Database-related modules
+│   │   ├── __init__.py
+│   │   ├── base.py            # Base class for models
+│   │   ├── session.py         # DB session creation
+│   │   └── init_db.py         # Initial DB population
+
+
+```py base.py
+from sqlalchemy.orm import DeclarativeBase
+
+
+class Base(DeclarativeBase): ...
+
+```
+
+
+```py
+
+from db.base import Base
+from sqlalchemy.orm import mapped_column, Mapped, relationship
+from sqlalchemy import Integer,String, func, ForeignKey, DateTime
+from typing import Optional
+from datetime import datetime
+
+"""
+from sqlalchemy.dialects.postgresql import UUID
+import uuid
+id: Mapped[UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+""'
+
+class User(Base):
+    __tablename__ = "users"
+    id: Mapped[int] = mapped_column(Integer,primary_key=True, unique=True, index=True)
+    name:Mapped[str] = mapped_column(String(30))
+    department : Mapped[Optional[str]]
+    status : Mapped[int] = mapped_column(Integer, default=1)
+    created_on :Mapped[datetime] = mapped_column(DateTime, default=func.now())
+    posts :Mapped['Post'] = relationship(back_populates='user')
+
+
+
+class Post(Base):
+    __tablename__ = "posts"
+    id: Mapped[int] = mapped_column(Integer,primary_key=True, unique=True, index=True)
+    name:Mapped[str] = mapped_column(String(30))
+    name:Mapped[str] = mapped_column(String(100))
+    user_id :Mapped[int] = mapped_column(ForeignKey('users.id'))
+    user :Mapped['User'] = relationship(back_populates='posts')
+```
+

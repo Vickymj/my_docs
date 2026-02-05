@@ -1,0 +1,25 @@
+---
+id : fastapi_db_session
+title : FastAPI DB Session
+---
+
+
+## Basic of Context Manager
+
+-ref context_manage.png
+then context_manage2.png
+
+
+```py
+def get_db_sesion():
+    pass
+
+session: Session = Depends(get_db_sesion)
+#annoted
+session = Annoted[Session, Depends(get_db_sesion)]
+               # [type ,   metadata] 
+               # fastapi execute depends pass the metadata(value) to session variale
+               datetiem.now() + timedelta(days=3)
+               >organize import # shrotcut Shif+alt+O
+
+```

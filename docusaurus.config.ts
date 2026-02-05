@@ -83,6 +83,7 @@ const config: Config = {
       items: [
         { to: '/docs/commons/intro', label: 'Docs', position: 'left' },
         { to: '/docs/python/python_intro', label: 'Python', position: 'left' },
+        { to: '/docs/fastapi/fastapi_basic', label: 'FastAPI', position: 'left' },
         { to: '/docs/sql/sql_intro', label: 'SQL', position: 'left' },
         { to: '/docs/docker/docker_intro', label: 'Docker', position: 'left' },
         {

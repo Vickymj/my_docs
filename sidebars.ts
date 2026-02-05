@@ -72,6 +72,29 @@ const sidebars: SidebarsConfig = {
       ],
     }
   ],
+   FastAPI: [
+    {
+      type: 'category',
+      label: 'Basic - CRUD',
+      items: [
+        'fastapi/fastapi_basic',
+        'fastapi/installation_basic_setup',
+        'fastapi/type_hinting',
+        'fastapi/decorator',
+        'fastapi/fastapi_basic_CRUD',
+        
+        
+      ],
+    },
+     {
+      type: 'category',
+      label: 'Pydantic Models',
+      items: [
+        'python/python_intro',
+         'python/python_variables',
+      ],
+    }
+  ],
 
   SQL: [
     {

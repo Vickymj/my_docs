@@ -1,0 +1,49 @@
+---
+id : decorator
+title : Decorators
+---
+
+```py
+def frans(func):
+    def wrapper():
+        print("+" * 10)
+        func()
+
+    return wrapper
+
+
+@frans
+def my_func():
+    print("hello!")
+
+
+my_func()
+my_func = frans(my_func)
+my_func()
+
+
+# with parameter
+def with_params(params):
+    def frans(func):
+        def wrapper():
+            print(params * 10)
+            func
+
+        return wrapper
+
+    return frans()
+
+
+@with_params("+")
+def my_func():
+    print("hello!")
+
+
+frans = with_params("+")  # return franc
+my_func = frans(my_func)
+my_func()
+# or
+my_func = with_params("+")(my_func)
+my_func()
+
+```
