@@ -35,6 +35,16 @@ const sidebars: SidebarsConfig = {
     'commons/uv_intro',
     {
        type: 'category',
+      label: 'SQLalchemy',
+      items: [
+        
+        'commons/sqlalchemy/sqlalchemy_quick_start',
+        'commons/sqlalchemy/sqlalchemy_models',
+      ],
+
+    },
+    {
+       type: 'category',
       label: 'Alembic',
       items: [
         
@@ -79,9 +89,11 @@ const sidebars: SidebarsConfig = {
       items: [
         'fastapi/fastapi_basic',
         'fastapi/installation_basic_setup',
-        'fastapi/type_hinting',
+        'fastapi/type_hinting_annotation',
         'fastapi/decorator',
         'fastapi/fastapi_basic_CRUD',
+        'fastapi/fastapi_db_session',
+        'fastapi/python_async',
         
         
       ],

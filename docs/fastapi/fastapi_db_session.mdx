@@ -5,6 +5,83 @@ title : FastAPI DB Session
 
 
 ## Basic of Context Manager
+below example is how context manager working 
+```py
+
+class DataBase:
+    def __init__(self):
+        print("DB object created")
+
+    def callfunc(self):
+        print("DB connection opened")
+
+    def closefunc(self):
+        print("DB connection closed")
+
+    def get(self):
+        print("Fetching data")
+
+    def __enter__(self):
+        self.callfunc()      # runs at start of `with`
+        return self         # assigned to `as db`
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.closefunc()    # always runs at end
+
+
+# use
+with DataBase() as db:
+    db.get()
+
+
+#output
+"""
+DB object created
+DB connection opened
+Fetching data
+DB connection closed
+"""
+
+
+```
+
+now let breakdown the context manage with generator func
+
+```py
+
+from contextlib import contextmanager
+
+class DataBase:
+    def callfunc(self):
+        print("DB connection opened")
+
+    def closefunc(self):
+        print("DB connection closed")
+
+    def get(self):
+        print("Fetching data")
+
+@contextmanager
+def database():
+    db = DataBase()
+    db.callfunc()           # __enter__ logic
+    try:
+        yield db            # value for `as db`
+    finally:
+        db.closefunc()      # __exit__ logic
+
+# useage
+with database() as db:
+    db.get()
+
+# output
+"""
+DB connection opened
+Fetching data
+DB connection closed
+"""
+
+```
 
 -ref context_manage.png
 then context_manage2.png

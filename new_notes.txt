@@ -1,0 +1,6 @@
+python is the interperter language means while runing first 
+it will convert the code byte code then 
+the interperter (python virutal machine) execute line by line at runtime
+
+
+dynamcially typed language means datatype will assign while execute the code 
