@@ -1,0 +1,329 @@
+---
+id : python_linked_list_exercises
+title: Python - Linked List Exercises
+---
+
+```py
+### Merge Two Sorted Linked List
+You are given the heads of two sorted linked lists list1 and list2. 
+
+Merge the two lists in a one sorted list. The list should be made by splicing together the nodes of the first two lists.
+
+Return the head of the merged linked list.   
+
+Example 1: 
+
+Input: list1 = [1,2,4], list2 = [1,3,4]
+
+Output: [1,1,2,3,4,4]
+
+Example 2:
+
+Input: list1 = [], list2 = []
+
+Output: []
+
+Example 3: 
+
+Input: list1 = [], list2 = [0]
+
+Output: [0]
+
+
+
+Constraints: 
+
+The number of nodes in both lists is in the range [0, 50].
+
+-100 <= Node.val <= 100
+
+Both list1 and list2 are sorted in non-decreasing order.
+
+
+Solution
+
+# Definition for singly-linked list.
+class ListNode(object):
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+class Solution(object):
+    def mergeTwoLists(self, l1, l2):
+        """
+        :type list1: Optional[ListNode]
+        :type list2: Optional[ListNode]
+        :rtype: Optional[ListNode]
+        """
+        prehead = ListNode(-1)
+ 
+        prev = prehead
+        while l1 and l2:
+            if l1.val <= l2.val:
+                prev.next = l1
+                l1 = l1.next
+            else:
+                prev.next = l2
+                l2 = l2.next            
+            prev = prev.next
+ 
+        # At least one of l1 and l2 can still have nodes at this point, so connect
+        # the non-null list to the end of the merged list.
+        prev.next = l1 if l1 is not None else l2
+ 
+        return prehead.next
+
+
+### Remove Duplicates
+Given the head of a sorted linked list, delete all duplicates such that each element appears only once. Return the linked list sorted as well. 
+
+Example 1:
+
+Input: head = [1,1,2]
+Output: [1,2]
+Example 2:
+
+Input: head = [1,1,2,3,3]
+Output: [1,2,3]
+
+
+Solution
+class ListNode(object):
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+ 
+class Solution(object):
+    def deleteDuplicates(self, head):
+        if not head:
+            return None
+        
+        seen = set()
+        dummy = ListNode(-1)
+        dummy.next = head
+        prev_node = dummy
+        current_node = head
+ 
+        while current_node:
+            if current_node.val in seen:
+                prev_node.next = current_node.next
+                current_node = current_node.next
+            else:
+                seen.add(current_node.val)
+                prev_node = current_node
+                current_node = current_node.next
+        
+        return dummy.next
+
+
+### Remove Linked List Elements
+Given the head of a linked list and an integer val, remove all the nodes of the linked list that has Node.val == val, and return the new head.
+
+
+
+Example 1:
+
+```
+![](/img/python/removelinked-list.jpg)
+```py
+
+Input: head = [1,2,6,3,4,5,6], val = 6
+Output: [1,2,3,4,5]
+Example 2:
+
+Input: head = [], val = 1
+Output: []
+Example 3:
+
+Input: head = [7,7,7,7], val = 7
+Output: []
+
+
+Constraints:
+
+The number of nodes in the list is in the range [0, 104].
+
+1 <= Node.val <= 50
+
+0 <= val <= 50
+
+
+Solution
+
+class ListNode(object):
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+ 
+class Solution(object):
+    def removeElements(self, head, val):
+        dummy_head = ListNode(-1)
+        dummy_head.next = head
+ 
+        prev_node, curr_node = dummy_head, head
+        while curr_node:
+            if curr_node.val == val:
+                prev_node.next = curr_node.next
+            else:
+                prev_node = curr_node
+            curr_node = curr_node.next
+ 
+        return dummy_head.next
+```
+
+### Reverse Linked List
+Given the head of a singly linked list, reverse the list, and return the reversed list.
+
+
+
+Example 1:
+
+![](/img/python/rev1ex1.jpg)
+
+
+
+Input: head = [1,2,3,4,5]
+Output: [5,4,3,2,1]
+Example 2:
+
+
+![](/img/python/rev1ex2.jpg)
+
+
+Input: head = [1,2]
+Output: [2,1]
+Example 3:
+
+Input: head = []
+Output: []
+
+
+Constraints:
+
+- The number of nodes in the list is the range `[0, 5000]`.
+- `-5000 <= Node.val <= 5000`
+
+Solution
+```py
+class ListNode(object):
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+ 
+class Solution(object):
+    def reverseList(self, head):
+        prev_node = None
+        curr_node = head
+ 
+        while curr_node is not None:
+            next_node = curr_node.next
+            curr_node.next = prev_node
+            prev_node = curr_node
+            curr_node = next_node
+        return prev_node
+
+```
+
+### Palindrome Linked List
+Given the head of a singly linked list, return true if it is a palindrome or false otherwise.
+
+
+
+Example 1:
+
+
+![](/img/python/pal1linked-list.jpg)
+
+
+Input: head = [1,2,2,1]
+Output: true
+Example 2:
+
+![](/img/python/pal2linked-list.jpg)
+
+
+
+Input: head = [1,2]
+Output: false
+
+
+Constraints:
+
+- The number of nodes in the list is in the range `[1, 105]`.
+- `0 <= Node.val <= 9`
+
+Solution
+```py
+
+class ListNode(object):
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+ 
+class Solution(object):
+    def isPalindrome(self, head):
+        slow = fast = head
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+        
+        prev = None
+        while slow:
+            nxt = slow.next
+            slow.next = prev
+            prev = slow
+            slow = nxt
+            
+        while prev:
+            if head.val != prev.val:
+                return False
+            head = head.next
+            prev = prev.next
+        return True
+```
+
+### Middle of the Linked List
+Given the head of a singly linked list, return the middle node of the linked list.
+
+If there are two middle nodes, return the second middle node.
+
+
+
+Example 1:
+
+![](/img/python/lc-midlist1.jpg)
+
+Input: head = [1,2,3,4,5]
+Output: 3
+Explanation: The middle node of the list is node 3.
+
+Example 2:
+
+
+![](/img/python/lc-midlist2.jpg)
+
+Input: head = [1,2,3,4,5,6]
+Output: 4
+Explanation: Since the list has two middle nodes with values 3 and 4, we return the second one.
+
+
+Constraints:
+
+- The number of nodes in the list is in the range `[1, 100]`.
+
+- `1 <= Node.val <= 100`
+
+```py
+class ListNode(object):
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+ 
+class Solution(object):
+    def middleNode(self, head):
+        fast = head
+        while fast and fast.next:
+            head = head.next
+            fast = fast.next.next
+            
+        return head
+```

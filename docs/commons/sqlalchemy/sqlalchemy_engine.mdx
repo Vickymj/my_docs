@@ -1,0 +1,38 @@
+---
+id: sqlalchemy_engine
+title: Sqlalchemy - Engine/Session
+---
+## Creating Engine
+```py title='db.py'
+from sqlalchemy import create_engine
+db_url = 'sqlite:///workbench.db'
+
+engine = create_engine(db_url,echo=True)
+
+```
+Creating Table
+
+```py
+from models import Base  # Base it contains all the table data
+# Create the database tables
+Base.metadata.create_all(engine)
+```
+
+
+## Creating Session
+```py
+from sqlalchemy.orm import sessionmaker
+Session = sessionmaker(bind=engine)
+```
+
+Calling the Session
+```py
+with Session() as session:
+    session.....
+
+def get_db:
+    with Session() as session:
+    yield session
+```
+
+

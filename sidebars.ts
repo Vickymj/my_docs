@@ -40,6 +40,8 @@ const sidebars: SidebarsConfig = {
         
         'commons/sqlalchemy/sqlalchemy_quick_start',
         'commons/sqlalchemy/sqlalchemy_models',
+        'commons/sqlalchemy/sqlalchemy_engine',
+        'commons/sqlalchemy/sqlalchemy_basic_crud',
       ],
 
     },
@@ -69,8 +71,47 @@ const sidebars: SidebarsConfig = {
          'python/python_comments',
          'python/python_walrus_operator',
          'python/python_control_flow',
-         'python/python_data_types',
+
+
+
          
+         
+      ],
+    },
+     {
+      type: 'category',
+      label: 'Python List',
+      items: [
+        'python/python_list/python_list_basic',
+         'python/python_list/python_list_quiz',
+         'python/python_list/python_list_exercises',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Python Dict',
+      items: [
+        'python/python_dict/python_dict_basic',
+         'python/python_dict/python_dict_quiz',
+         'python/python_dict/python_dict_exercises',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Python Tuple',
+      items: [
+        'python/python_tuple/python_tuple_basic',
+         'python/python_tuple/python_tuple_quiz',
+         'python/python_tuple/python_tuple_exercises',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Python LinkedList',
+      items: [
+        'python/big_O/linked_list/python_linked_list_basic',
+        'python/big_O/linked_list/python_linked_list_quiz',
+        'python/big_O/linked_list/python_linked_list_exercises',
       ],
     },
     {
@@ -80,7 +121,8 @@ const sidebars: SidebarsConfig = {
         'python/python_intro',
          'python/python_variables',
       ],
-    }
+    },
+    'python/python_interview_questions',
   ],
    FastAPI: [
     {
@@ -98,14 +140,14 @@ const sidebars: SidebarsConfig = {
         
       ],
     },
-     {
-      type: 'category',
-      label: 'Pydantic Models',
-      items: [
-        'python/python_intro',
-         'python/python_variables',
-      ],
-    }
+    //  {
+    //   type: 'category',
+    //   label: 'Pydantic Models',
+    //   items: [
+    //     'python/python_intro',
+    //      'python/python_variables',
+    //   ],
+    // }
   ],
 
   SQL: [

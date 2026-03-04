@@ -6,7 +6,7 @@ title: Sqlalchemy - Models
 
 Creating the Base Model
 
-```py base.py
+```py title='base.py'
 
 from sqlalchemy.orm import DeclarativeBase
 class Base(DeclarativeBase):
@@ -14,31 +14,63 @@ class Base(DeclarativeBase):
 
 ```
 
-```py models.py
+```py title='models.py'
 
 from typing import Optional
 from sqlalchemy import ForeignKey,String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
+
 class User(Base):
-    __tablename__ = "user_account"
-    id: Mapped[int] = mapped_column(primary_key=True)
+    __tablename__ = 'user_account'
+    id = Column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(30))
     fullname: Mapped[Optional[str]]
-    addresses: Mapped[List["Address"]] = relationship(
-        back_populates="user", cascade="all, delete-orphan"
+    posts: Mapped[list['Post']] = relationship(
+        back_populates='user',
+        lazy='select',
     )
-    def __repr__(self) -> str:
-        return f"User(id={self.id!r}, name={self.name!r}, fullname={self.fullname!r})"
 
-class Address(Base):
-    __tablename__ = "address"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    email_address: Mapped[str]
-    user_id: Mapped[int] = mapped_column(ForeignKey("user_account.id"))
-    user: Mapped["User"] = relationship(back_populates="addresses")
-    def __repr__(self) -> str:
-        return f"Address(id={self.id!r}, email_address={self.email_address!r})"
+    def __repr__(self):  # for developer represntation
+        return f"User(id={self.id!r}, name={self.name!r})" # self.name!r (repr) -output 'name'
+    #print(f'{name}') #output-- Vicky
+    #   print(f'{name!r}') #output-- 'Vicky'
+
+
+class Post(Base):
+    __tablename__ = 'posts'
+    id = Column(Integer, primary_key=True)
+    active: Mapped[bool] = mapped_column(default=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
+    user: Mapped['User'] = relationship(back_populates='posts', lazy='select')
+    details: Mapped[list['Detail']] = relationship(back_populates='post', lazy='select')
+
+    @classmethod
+    def is_active(cls):
+        return cls.active is True
+
+    def __repr__(self):
+        return f"Post(id={self.id!r})"
+
+
+class Detail(Base):
+    __tablename__ = 'details'
+    id = Column(Integer, primary_key=True)
+    content: Mapped[str]
+    post_id: Mapped[int] = mapped_column(ForeignKey('posts.id'))
+    post: Mapped['Post'] = relationship(back_populates='details', lazy='select')
+    active: Mapped[bool] = mapped_column(default=True)
+
+    @classmethod
+    def is_active(cls):
+        return cls.active == True
+
+    def __repr__(self): 
+        return f"Detail(id={self.id!r}, content={self.content!r}, fullname={self.fullname!r})"
+
 
 ```
+
+
+

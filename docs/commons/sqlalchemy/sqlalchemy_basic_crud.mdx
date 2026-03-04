@@ -1,0 +1,195 @@
+---
+id: sqlalchemy_basic_crud
+title: Sqlalchemy - Basic Crud
+---
+## Creating the User
+
+```py
+from db import get_db
+from models import User, Post, Detail
+
+session = get_db()
+
+user1 = User(
+    name='vicky',fullname='Vignesh MJ',
+    posts = [
+        Post(active=True, 
+            details=[
+                Detail(content='Header', active=True),
+                Detail(content='Body', active=True),
+            ])
+    ]
+
+    )
+user2 = User(
+    name='Jaga',fullname='Jagadeeshwari
+    )
+user3 = User(
+    name='Adhiyan',fullname='Adhiyan Kutty
+    )
+
+session.add_all([user1, user2, user3])
+#if only one user at at time
+#then session.add(user1)
+session.commit()
+
+```
+
+Bulk data adding for testing
+```py
+if __name__ == "__main__":
+    with Session() as session:
+        for start in range(0,1_000,10):
+            users_info = [User(name=f"user {u_idx}",
+                            posts=[Post(active=True,
+                                        details=[Detail(content=f"Content {u_idx}-{p_idx}-{d_idx}" ,
+                                        
+                                        active=True) for d_idx in range(random.randint(1,5))]
+                                
+                            ) for p_idx in range(random.randint(1,7))]
+                            ) for u_idx in range(start , start+10)]
+          
+            session.add_all(users_info)
+            session.commit()
+            session.expunge_all()   # free memory
+
+
+```
+
+
+## Simple Select
+
+```py
+
+from sqlalchemy import select
+
+session = Session(engine)
+
+stmt = select(User).where(User.name.in_(["Vicky", "Adhiyan"]))
+
+for user in session.scalars(stmt):
+    print(user)
+
+```
+
+
+<details>
+<summary><strong>SQL Query</strong></summary>
+
+Hidden expandable content.
+
+```bash
+BEGIN (implicit)
+SELECT user_account.id, user_account.name, user_account.fullname
+FROM user_account
+WHERE user_account.name IN (?, ?)
+[...] ('spongebob', 'sandy')
+```
+
+</details>
+
+:::tip Output
+```bash
+User(id=1, name='spongebob', fullname='Spongebob Squarepants')
+User(id=2, name='sandy', fullname='Sandy Cheeks')
+```
+:::
+
+## SELECT with JOIN
+
+
+```py
+stmt = (
+    select(Address)
+    .join(Address.user)
+    .where(User.name == "sandy")
+    .where(Address.email_address == "sandy@sqlalchemy.org")
+)
+sandy_address = session.scalars(stmt).one()
+sandy_address
+```
+
+<details>
+<summary><strong>SQL Query</strong></summary>
+SELECT address.id, address.email_address, address.user_id
+FROM address JOIN user_account ON user_account.id = address.user_id
+WHERE user_account.name = ? AND address.email_address = ?
+[...] ('sandy', 'sandy@sqlalchemy.org')
+</details>
+
+:::tip Output
+sandy_address=Address(id=2, email_address='sandy@sqlalchemy.org')
+:::
+
+
+## Make Changes
+
+
+```py
+stmt = select(User).where(User.name == "patrick")
+patrick = session.scalars(stmt).one()
+patrick.addresses.append(Address(email_address="patrickstar@sqlalchemy.org"))
+sandy_address.email_address = "sandy_cheeks@sqlalchemy.org"
+
+session.commit()
+```
+## Some Deletes
+
+
+```py
+sandy = session.get(User, 2)
+sandy.addresses.remove(sandy_address)
+
+session.delete(patrick)  #Marked for deletion
+
+```
+<details>
+<summary><strong>SQL Query</strong></summary>
+SELECT user_account.id AS user_account_id, user_account.name AS user_account_name, user_account.fullname AS user_account_fullname
+FROM user_account
+WHERE user_account.id = ?
+[...] (3,)
+SELECT address.id AS address_id, address.email_address AS address_email_address, address.user_id AS address_user_id
+FROM address
+WHERE ? = address.user_id
+[...] (3,)
+</details>
+
+send it and execute in the  the sql but still we can revert the original data using 
+```py
+session.flush()
+
+```
+:::tip Output
+DELETE FROM address WHERE address.id = ?
+[...] (4,)
+DELETE FROM user_account WHERE user_account.id = ?
+[...] (3,)
+
+:::
+commit will handle both flush and comit
+```py
+session.commit()
+
+```
+:::tip Output
+DELETE FROM address WHERE address.id = ?
+[...] (4,)
+DELETE FROM user_account WHERE user_account.id = ?
+[...] (3,)
+COMMIT
+:::
+
+| Operation | What It Does |
+|------|---------|
+| session.delete(obj) | Marks object for deletion | 
+| session.flush() | Sends pending SQL to DB | 
+| session.commit() | Permanently saves changes | 
+
+
+
+
+
+
+
+
