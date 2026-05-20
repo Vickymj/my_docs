@@ -8,6 +8,7 @@ title : FastAPI Pydantic With CRUD
 
 
 from pydantic import BaseModel, Field
+from enum import Enum
 
 
 class Shipment(BaseModel):
@@ -33,14 +34,10 @@ class Shipment(BaseModel):
         # here a random integer 
         # default_factory=lambda : randint(11000, 11999),
     )
-```
+    designation1:int |None = Field(default=None)
+    designation2:int |None = Field(default=randint(1,10))
+    designation3:int |None = Field(default_factory=random_destination)
 
-
-## CRUD 
-
-```py title="schemas.py"
-from enum import Enum
-from pydantic import BaseModel, Field
 
 
 class ShipmentStatus(str, Enum):
@@ -68,76 +65,279 @@ class ShipmentUpdate(BaseModel):
     status: ShipmentStatus
 ```
 
-```py title='main.py'
-from fastapi import FastAPI, HTTPException, status
-from scalar_fastapi import get_scalar_api_reference
+## Basic CRUD
+```py title='models.py'
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy import Integer, String, ForeignKey
 
-from .schemas import ShipmentCreate, ShipmentRead, ShipmentUpdate
+class Base(DeclarativeBase):...
+class User(Base):
+    __tablename__ = "users"
+    id :Mapped[int] = mapped_column(Integer,primary_key=True, index=True)
+    name:Mapped[str] = mapped_column(String(50), nullable=False)
+    age:Mapped[int] = mapped_column(Integer, nullable=True)
+    addresses:Mapped[list['Address']] = relationship(back_populates='user',
+                                                      cascade="all, delete-orphan")
+
+class Address(Base):
+    __tablename__ = "addresses"
+    id:Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    city:Mapped[str] = mapped_column(String, nullable=True)
+    state:Mapped[str] = mapped_column(String, nullable=True)
+    zipcode:Mapped[str] = mapped_column(String, nullable=True)
+    user_id:Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
+    user:Mapped['User'] = relationship(back_populates='addresses')
 
 
-app = FastAPI()
 
-### Shipments datastore as dict
-shipments = {
-    12701: {"weight": 8.2, "content": "aluminum sheets", "status": "placed", "destination": 11002},
-    12702: {"weight": 14.7, "content": "steel rods", "status": "shipped", "destination": 11003},
-    12703: {"weight": 11.4, "content": "copper wires", "status": "delivered", "destination": 11002},
-    12704: {"weight": 17.8, "content": "iron plates", "status": "in transit", "destination": 11005},
-    12705: {"weight": 10.3, "content": "brass fittings", "status": "returned", "destination": 11008},
-}
+```
+```py title='schemas.py'
+
+class AddressBase(BaseModel):
+    city: str
+    state: str
+    zipcode: Optional[str] = None
 
 
-###  a shipment by id
-@app.get("/shipment", response_model=ShipmentRead)
-def get_shipment(id: int):
-    # Check for shipment with given id
-    if id not in shipments:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Given id doesn't exist!",
+class AddressCreate(AddressBase):
+    pass
+
+
+class AddressResponse(AddressBase):
+    id: int
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+# ---------- User ----------
+
+class UserBase(BaseModel):
+    name: str
+    age: int
+
+
+class UserCreate(UserBase):
+    addresses: Optional[list[AddressCreate]]
+
+
+class UserResponse(UserBase):
+    id: int
+    addresses: list[AddressResponse]
+
+    model_config = ConfigDict(from_attributes=True)
+```
+
+## CRUD
+### Create Method:
+```py
+
+@app.post("/users", response_model=UserResponse)
+async def create_user(
+    data: UserCreate,
+    session: AsyncSession = Depends(get_session)
+
+):
+    new_user = User(
+    **data.model_dump(exclude={"addresses"}),
+    addresses=[
+        Address(**addr.model_dump())
+        for addr in (data.addresses or [])
+    ]
+    )
+    # or 
+    # new_user = User(**data.model_dump(exclude=[addresses]))
+    # new_user.addresses = [
+    #     Address(**addr.model_dump())
+    #     for addr in data.addresses
+    # ]
+    # or
+    # new_user.addresses.extend([
+    #     Address(**addr.model_dump())
+    #     for addr in data.addresses
+    # ])
+    # or
+    # new_user = User(
+        
+    #     name=data.name,
+    #     age=data.age,
+    #     addresses=[
+    #         Address(
+    #             city=addr.city,
+    #             state=addr.state,
+    #             zipcode=addr.zipcode
+    #         )
+    #         for addr in data.addresses
+    #     ]
+    # )
+
+    session.add(new_user)
+
+    await session.commit()
+    #await session.refresh(new_user)
+
+    # result = await session.execute(
+    #     select(User)
+    #     .options(selectinload(User.addresses))
+    #     .where(User.id == new_user.id)
+    # )
+    # Use with_loader_criteria() together with selectinload().
+    result = await session.execute(
+    select(User)
+    .options(
+        selectinload(User.addresses),
+        with_loader_criteria(
+            Address,
+            Address.state == "TN"
+        )
+    )
+    .where(User.id == new_user.id)
+    )
+    # Alternative Using Explicit Join
+
+#     from sqlalchemy.orm import contains_eager
+
+# result = await session.execute(
+#     select(User)
+#     .join(User.addresses)
+#     .options(contains_eager(User.addresses))
+#     .where(
+#         User.id == new_user.id,
+#         Address.state == "TN"
+#     )
+# )
+
+# user = result.unique().scalar_one()
+    """
+    | Method                                | Use Case                       |
+    | ------------------------------------- | ------------------------------ |
+    | `selectinload + with_loader_criteria` | easiest relationship filtering |
+    | `join + contains_eager`               | advanced/custom joins          |
+
+    """
+
+    user = result.scalar_one()
+
+    return new_user
+```
+
+### GetaLL
+```py
+
+@app.get("/users", response_model=list[UserResponse])
+async def get_users(
+    session: AsyncSession = Depends(get_session)
+):
+    # result = await session.execute(select(User))
+
+    # users = result.scalars().unique().all()
+
+    # return users
+
+    from sqlalchemy.orm import selectinload
+
+    result = await session.execute(
+        select(User).options(selectinload(User.addresses))
+    )
+    return result
+```
+### Get By id
+```py
+
+
+@app.get("/users/{user_id}", response_model=UserResponse)
+async def get_user(
+    user_id: int,
+    session: AsyncSession = Depends(get_session)
+):
+    from sqlalchemy.orm import contains_eager
+
+    result = await session.execute(
+            select(User)
+            .join(User.addresses)
+            .options(contains_eager(User.addresses))
+            .where(
+                User.id == user_id,
+                Address.state == "TN"
+            )
         )
 
-    return shipments[id]
+    # result = await session.execute(
+    #     select(User).where(User.id == user_id)
+    # )
 
+    user = result.unique().scalar_one_or_none()
 
-### Create a new shipment with content and weight
-@app.post("/shipment", response_model=None)
-def submit_shipment(shipment: ShipmentCreate) -> dict[str, int]:
-    # Create and assign shipment a new id
-    new_id = max(shipments.keys()) + 1
-    # Add to shipments dict
-    shipments[new_id] = {
-        **shipment.model_dump(),
-        "status": "placed",
-    }
-    # Return id for later use
-    return {"id": new_id}
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
 
+    return user
+```
 
-### Update fields of a shipment
-@app.patch("/shipment", response_model=ShipmentRead)
-def update_shipment(id: int, body: ShipmentUpdate):
-    # Update data with given fields
-    shipments[id].update(body)
-    return shipments[id]
+```py
 
-
-### Delete a shipment by id
-@app.delete("/shipment")
-def delete_shipment(id: int) -> dict[str, str]:
-    # Remove from datastore
-    shipments.pop(id)
-
-    return {"detail": f"Shipment with id #{id} is deleted!"}
-
-
-### Scalar API Documentation
-@app.get("/scalar", include_in_schema=False)
-def get_scalar_docs():
-    return get_scalar_api_reference(
-        openapi_url=app.openapi_url,
-        title="Scalar API",
+@app.put("/users/{user_id}", response_model=UserResponse)
+async def update_user(
+    user_id: int,
+    data: UserCreate,
+    session: AsyncSession = Depends(get_session)
+):
+    result = await session.execute(
+        select(User).where(User.id == user_id)
     )
 
+    user = result.scalar_one_or_none()
+
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    user.name = data.name
+    user.age = data.age
+
+    # remove old addresses
+    user.addresses.clear()
+
+    # add new addresses
+    user.addresses.extend([
+        Address(
+            city=addr.city,
+            state=addr.state,
+            zipcode=addr.zipcode
+        )
+        for addr in data.addresses
+    ])
+
+    await session.commit()
+    await session.refresh(user)
+
+    return user
+
+
+@app.delete("/users/{user_id}")
+async def delete_user(
+    user_id: int,
+    session: AsyncSession = Depends(get_session)
+):
+    result = await session.execute(
+        select(User).where(User.id == user_id)
+    )
+
+    user = result.scalar_one_or_none()
+
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    await session.delete(user)
+    await session.commit()
+
+    return {"message": "User deleted successfully"}
 
 ```

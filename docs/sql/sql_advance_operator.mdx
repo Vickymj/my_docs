@@ -1,0 +1,212 @@
+---
+id : sql_advance_operator
+title : SQL - Advance Operator
+---
+## SQL UNION Operator
+- The `UNION` operator is used to combine the result-set of two or more `SELECT` statements.
+- The `UNION` operator automatically removes duplicate rows from the result set.
+
+Requirements for UNION:
+- Every SELECT statement within UNION must have the same number of columns
+- The columns must also have similar data types
+- The columns in every SELECT statement must also be in the same order
+
+```sql
+SELECT column_name(s) FROM table1
+UNION
+SELECT column_name(s) FROM table2;
+```
+
+Example
+```sql
+SELECT 'Customer' AS Type, ContactName, City, Country
+FROM Customers WHERE Country='Germany'
+UNION
+SELECT 'Supplier', ContactName, City, Country
+FROM Suppliers
+WHERE Country='Germany'
+ORDER BY City;
+```
+
+## SQL UNION ALL Operator
+The `UNION ALL` operator is used to combine the result-set of two or more `SELECT` statements.
+
+The `UNION ALL` operator includes all rows from each statement, including any duplicates.
+
+Requirements for `UNION ALL`: 
+
+- Every `SELECT` statement within `UNION ALL` must have the same number of columns
+- The columns must also have similar data types
+- The columns in every `SELECT` statement must also be in the same order
+
+```sql
+SELECT column_name(s) FROM table1
+UNION ALL
+SELECT column_name(s) FROM table2;
+```
+
+## SQL GROUP BY Statement
+The GROUP BY statement is used to group rows that have the same values
+```sql
+SELECT column1, aggregate_function(column2), column3, ...
+FROM table_name
+WHERE condition
+GROUP BY column1, column3
+ORDER BY column_name;
+```
+## SQL HAVING Clause
+The HAVING clause is used to filter the results of a GROUP BY
+```sql
+SELECT column1, aggregate_function(column2), column3, ...
+FROM table_name
+WHERE condition
+GROUP BY column1, column3
+HAVING condition -- The condition on grouped data
+ORDER BY column_name;
+```
+
+## SQL EXISTS Operator
+- The `EXISTS` operator is used in a `WHERE` clause to check whether a subquery returns any rows.
+- The `EXISTS` operator evaluates to TRUE if the subquery returns at least one row, and FALSE otherwise
+
+```sql
+SELECT column_name(s)
+FROM table_name
+WHERE EXISTS (subquery);
+```
+Example:
+The following SQL checks if any suppliers has a product with a price equal to 22. If the subquery evaluates to TRUE; list the suppliers with a product price equal to 22:
+```sql
+SELECT SupplierName
+FROM Suppliers
+WHERE EXISTS (
+  SELECT ProductName
+  FROM Products
+  WHERE Products.SupplierID = Suppliers.supplierID AND Price = 22
+);
+```
+
+### Join and EXISTS Similarity
+```sql title='JOIN'
+SELECT SupplierName
+FROM Suppliers
+JOIN Products
+  ON Products.SupplierID = Suppliers.SupplierID
+WHERE Products.Price = 22;
+```
+
+```sql title='EXISTS'
+SELECT SupplierName
+FROM Suppliers
+WHERE EXISTS (
+  SELECT 1
+  FROM Products
+  WHERE Products.SupplierID = Suppliers.SupplierID
+    AND Price = 22
+);
+```
+#### Quick Difference
+| JOIN                          | EXISTS                       |
+| ----------------------------- | ---------------------------- |
+| Combines data                 | Checks existence             |
+| May return duplicates         | No duplicates                |
+| Returns matching rows         | Returns main table rows only |
+| Use when you need both tables | Use for filtering only       |
+| Get data                      | Check data                   |
+
+
+## SQL ANY Operator
+- The `ANY` operator is used to compare a value to every value returned by a subquery.
+- The `ANY` operator evaluates to TRUE if at least one value in the subquery result-set meet the condition.
+```sql
+SELECT column_name(s)
+FROM table_name
+WHERE column_name operator ANY (subquery);
+```
+:::info
+Note: The operator must be a standard comparison operator `(=, <>, !=, >, >=, <, or <=)`.
+:::
+Example :
+The following SQL returns the ProductName if it finds ANY records in the "OrderDetails" table that has Quantity larger than 1000 (this will return FALSE because the Quantity column has no values larger than 1000): 
+```sql
+SELECT ProductName FROM Products
+WHERE ProductID = ANY (
+  SELECT ProductID
+  FROM OrderDetails
+  WHERE Quantity > 1000
+);
+```
+
+## SQL ALL Operator
+
+- The `ALL` operator is used to compare a value to every value returned by a subquery.
+- The `ALL` operator evaluates to TRUE if every value in the subquery result-set meet the condition.
+- The `ALL` operator is typically used with `WHERE` and `HAVING` statements.
+
+```py
+SELECT column_name(s)
+FROM table_name
+WHERE column_name operator ALL (subquery);
+```
+Example:
+The following SQL returns the ProductName if ALL the records in the "OrderDetails" table has Quantity equal to 10. This will of course return FALSE because the Quantity column has many different values (not only the value of 10):
+```sql
+SELECT ProductName
+FROM Products
+WHERE ProductID = ALL (
+  SELECT ProductID
+  FROM OrderDetails
+  WHERE Quantity = 10
+);
+```
+## JOIN vs EXISTS vs NOT EXISTS vs ANY vs ALL
+
+| Keyword    | Meaning                        | Use case                      | Memory trick   |
+| ---------- | ------------------------------ | ----------------------------- | -------------- |
+| JOIN       | Combines data                  | Need columns from both tables | Get data       |
+| EXISTS     | At least one match exists      | Filter (has match)            | Has data       |
+| NOT EXISTS | No match exists                | Filter (no match)             | No data        |
+| ANY (SOME) | Matches any value in subquery  | Compare with multiple values  | Any match      |
+| ALL        | Matches all values in subquery | Compare against all values    | All must match |
+
+
+## SQL SELECT INTO Statement
+- The `SELECT INTO` statement is used to `create a new table and fill it with data` from an existing table.
+
+- The `SELECT INTO` statement is useful for creating backups or for creating a temporary table for analysis.
+
+`Note:` The new table will be created with the same column names and data types as defined in the source table. However, primary keys, indexes, or NOT NULL constraints are not automatically transferred.
+
+```sql
+SELECT * INTO newtable 
+FROM sourcetable
+WHERE condition;
+
+SELECT column1, column2, column3, ...
+INTO newtable 
+FROM sourcetable
+WHERE condition;
+```
+
+
+## SQL INSERT INTO SELECT Statement
+- The `INSERT INTO SELECT` statement is used to `copy data from an existing table` and insert it into another existing table.
+- The `INSERT INTO SELECT` statement requires that the data types in source and target tables match.
+
+`Note:` The existing records in the target table are unaffected.
+```sql
+INSERT INTO target_table
+SELECT * FROM source_table
+WHERE condition;
+```
+
+## SQL CASE Expression
+The `CASE` expression is used to define different results based on specified conditions in an SQL statement.
+```sql
+CASE
+  WHEN condition1 THEN result1
+  WHEN condition2 THEN result2
+  WHEN conditionN THEN resultN
+  ELSE default_result
+END;
+```

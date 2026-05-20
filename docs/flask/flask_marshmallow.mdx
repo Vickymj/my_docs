@@ -1,0 +1,125 @@
+---
+id : flask_marshmallow
+title : Flask - Marshmallow Schemas
+---
+
+```py
+from marshmallow import Schema, fields
+
+
+class ItemSchema(Schema):
+    id = fields.Str(dump_only=True)  
+    name = fields.Str(required=True)
+    price = fields.Float(required=True)
+    store_id = fields.Str(required=True)
+```
+`dump_only=True` not required for request obj but in the response field is there
+requried=True -mandiory field
+filed.str() -optioal field
+
+```py {2,3,4,5,6,7,8,9,10,11}
+def post(self):
+    item_data = request.get_json()
+    if (
+        "price" not in item_data
+        or "store_id" not in item_data
+        or "name" not in item_data
+    ):
+        abort(
+            400,
+            message="Bad request. Ensure 'price', 'store_id', and 'name' are included in the JSON payload.",
+        )
+    for item in items.values():
+        if (
+            item_data["name"] == item["name"]
+            and item_data["store_id"] == item["store_id"]
+        ):
+            abort(400, message=f"Item already exists.")
+
+    item_id = uuid.uuid4().hex
+    item = {**item_data, "id": item_id}
+    items[item_id] = item
+
+    return item
+```
+Now, I know what you're thinking! What about item_data? Do we not need to keep that?
+
+When we use marshmallow for validation with Flask-Smorest, it will inject the validated data into our method for us.
+
+Look at these two highlighted lines
+
+```py {1,2}
+@blp.arguments(ItemSchema)
+def post(self, item_data):
+    for item in items.values():
+        if (
+            item_data["name"] == item["name"]
+            and item_data["store_id"] == item["store_id"]
+        ):
+            abort(400, message=f"Item already exists.")
+
+    item_id = uuid.uuid4().hex
+    item = {**item_data, "id": item_id}
+    items[item_id] = item
+
+    return item
+```
+Nice!
+
+Plus, doing this also adds to your Swagger UI documentation.
+
+Let's do the same when updating items:
+
+```py {1,2}
+@blp.arguments(ItemUpdateSchema)
+def put(self, item_data, item_id):
+    try:
+        item = items[item_id]
+        item |= item_data
+
+        return item
+    except KeyError:
+        abort(404, message="Item not found.")
+```
+
+:::warning[Order of Parameters]
+Be careful here since we've now got `item_data` and `item_id`.  
+The URL arguments come in at the end.  
+
+The injected arguments are passed first, so `item_data` goes before `item_id` in our function signature.
+
+:::
+Decorating responses with Flask-Smorest
+
+```py
+@blp.response(200, ItemSchema)
+def get(self, item_id):
+    try:
+        return items[item_id]
+    except KeyError:
+        abort(404, message="Item not found.")
+```
+```py
+@blp.arguments(ItemUpdateSchema)
+@blp.response(200, ItemSchema)
+def put(self, item_data, item_id):
+    try:
+        item = items[item_id]
+
+        # https://blog.teclado.com/python-dictionary-merge-update-operators/
+        item |= item_data
+
+        return item
+    except KeyError:
+        abort(404, message="Item not found.")
+```
+:::waring
+Careful with the order of decorators in these functions!
+:::
+
+When we get to returning a list of items, it looks like this:
+```py
+@blp.response(200, ItemSchema(many=True))
+def get(self):
+    return items.values()
+```

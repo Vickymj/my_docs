@@ -1,0 +1,117 @@
+---
+id : django_basic_CRUD
+title: Django - Basic CRUD
+---
+
+## Create Model
+```py title='models.py'
+from django.db import models
+
+
+class Movie(models.Model):
+    name = models.CharField(max_length=50)
+    description = models.CharField(max_length=200)
+    active = models.BooleanField(default=True)
+
+    def __str__(self) -> str:
+        return f'{self.name}'
+
+```
+## ✅ Full CRUD for Movie model
+
+```py
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from .models import Movie
+
+```
+
+### 1. GET ALL (Read All)
+```py
+def main(request):
+    if request.method == "GET":
+        data = list(Movie.objects.values())
+        return JsonResponse(data, safe=False)
+```
+
+
+```py
+
+def get_by_id(request, id):
+    try:
+        movie = Movie.objects.get(id=id)
+        json_data = {
+            "id": movie.id,
+            "name": movie.name,
+            "description": movie.description,
+            "active": movie.active
+        }
+        return JsonResponse(json_data)
+    except Movie.DoesNotExist:
+        return JsonResponse({"error": "Movie not found"}, status=404)
+```
+
+### 3. CREATE (POST)
+```py
+@csrf_exempt
+def create_data(request):
+    if request.method == "POST":
+        body = json.loads(request.body)
+
+        movie = Movie.objects.create(
+            name=body.get("name"),
+            description=body.get("description"),
+            active=body.get("active", True)
+        )
+
+        return JsonResponse({
+            "message": "Movie created",
+            "id": movie.id
+        }, status=201)
+```
+### 4. UPDATE (PUT)
+```py
+@csrf_exempt
+def update_data(request, id):
+    if request.method == "PUT":
+        try:
+            movie = Movie.objects.get(id=id)
+            body = json.loads(request.body)
+
+            movie.name = body.get("name", movie.name)
+            movie.description = body.get("description", movie.description)
+            movie.active = body.get("active", movie.active)
+            movie.save()
+
+            return JsonResponse({"message": "Movie updated"})
+        except Movie.DoesNotExist:
+            return JsonResponse({"error": "Movie not found"}, status=404)
+```
+### 5. DELETE
+```py
+@csrf_exempt
+def delete_data(request, id):
+    if request.method == "DELETE":
+        try:
+            movie = Movie.objects.get(id=id)
+            movie.delete()
+            return JsonResponse({"message": "Movie deleted"})
+        except Movie.DoesNotExist:
+            return JsonResponse({"error": "Movie not found"}, status=404)
+```
+
+### URLS.py
+```py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('movies/', views.main),
+    path('movies/<int:id>/', views.get_by_id),
+    path('movies/create/', views.create_data),
+    path('movies/update/<int:id>/', views.update_data),
+    path('movies/delete/<int:id>/', views.delete_data),
+]
+```
+

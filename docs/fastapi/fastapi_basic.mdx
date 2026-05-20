@@ -3,12 +3,34 @@ id: fastapi_basic
 title: FastAPI - Basic
 ---
 
+
+## First Step
+
+```py title='main.py'
+from fastapi import FastAPI
+
+app = FastAPI()
+
+
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
+```
+Copy that to a file `main.py`.
+
+### Run the live server:
+```bash
+fastapi dev
+```
+Open your browser at http://127.0.0.1:8000.
+
 installation
+
 uv add fastapi uvicorn/"uvicorn[standard]"
 
 
-in main.py add 
-```py
+
+```py title='main.py'
 from fastapi import FastAPI
 app = FastAPI()
 
@@ -22,7 +44,7 @@ uv run uvicorn main:app --reload #(main is the filename app ref `app`=FastAPI())
 ```
 
 ## routers
-
+```
 ├── api/                   # API routes grouped by version or feature
 │   ├── __init__.py
 │   ├── deps.py            # Common dependencies for API routes
@@ -33,9 +55,9 @@ uv run uvicorn main:app --reload #(main is the filename app ref `app`=FastAPI())
 │   │   └── items.py
 │   └── router.py  
 
+```
 
-
---in users.py
+```py title='users.py' 
 from fastapi import APIRouter
 
 router = APIRouter(prefix="users",tags=["users"]) # prefix in url:http://localhost:8000/users/ tags means grouping in 
@@ -43,12 +65,12 @@ router = APIRouter(prefix="users",tags=["users"]) # prefix in url:http://localho
 @router.get("/")
 def main():
     return dict(user="vicky",dep="IT")
+```
 
 
 
 
---router.py 
-```py
+```py title="router.py"
 
 from fastapi import APIRouter
 from api.endpoints import users
@@ -59,8 +81,8 @@ master_router.include_router(users.router)
 ```
 
 
-in main.py
-```py
+
+```py title='main.py'
 @app.get("/")
 def main():
     return dict(message="API")
@@ -68,7 +90,7 @@ def main():
 app.include_router(master_router)
 ```
 ## adding middleware
-```py main.py
+```py title='main.py'
 @app.middleware("http")
 async def custommiddleware(request: Request, call_next):
     start = perf_counter()
@@ -106,7 +128,10 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
-```│   │
+
+```
+```
+│   │
 │   ├── models/                # ORM models (SQLAlchemy, Tortoise, etc.)
 │   │   ├── __init__.py
 │   │   ├── user.py
@@ -117,9 +142,8 @@ app = FastAPI(lifespan=lifespan)
 │   │   ├── base.py            # Base class for models
 │   │   ├── session.py         # DB session creation
 │   │   └── init_db.py         # Initial DB population
-
-
-```py base.py
+```
+```py title='base.py'
 from sqlalchemy.orm import DeclarativeBase
 
 
@@ -128,7 +152,7 @@ class Base(DeclarativeBase): ...
 ```
 
 
-```py
+```py 
 
 from db.base import Base
 from sqlalchemy.orm import mapped_column, Mapped, relationship
@@ -142,7 +166,7 @@ import uuid
 id: Mapped[UUID] = mapped_column(
         UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
-""'
+"""
 
 class User(Base):
     __tablename__ = "users"

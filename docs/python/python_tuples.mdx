@@ -1,0 +1,83 @@
+---
+id : python_tuples
+title : Python - Tuples
+---
+
+## Access Tuple Items
+| Method | Description | Example |
+|--------|-------------|---------|
+| **Accessing Tuple Items with Indexing** | Accesses a single item from the tuple using its index position. Indexing starts from `0`. | `tup = (10, 20, 30)` <br/> `tup[1]` → `20` |
+| **Access Tuple Items with Slice Operator** | Accesses a range of items from the tuple using the slice operator `[start:end]`. | `tup = (10, 20, 30, 40, 50)` <br/> `tup[1:4]` → `(20, 30, 40)` |
+
+## Python - Update Tuples
+| Method | Description | Example |
+|--------|-------------|---------|
+| **Updating Tuples Using Concatenation Operator** | Tuples are immutable, so new tuples can be created using the `+` operator. | `tup = (1, 2, 3)` <br/> `tup = tup + (4,)` <br/> `print(tup)` |
+| **Updating Tuples Using Slicing** | Creates a new tuple using slicing and concatenation. <br/><br/> **Syntax:** `sequence[start:stop:step]` | `tup = (1, 2, 3, 4)` <br/> `tup = tup[:2] + (10, 20) + tup[2:]` <br/> `print(tup)` |
+| **Updating Tuples Using List Comprehension** | Converts tuple items into a modified tuple using comprehension. | `tup = (1, 2, 3)` <br/> `new_tup = tuple(x*2 for x in tup)` <br/> `print(new_tup)` |
+| **Updating Tuples Using append() Function** | Since tuples do not support `append()`, convert tuple into a list, append item, and convert back to tuple. | `tup = (1, 2, 3)` <br/> `temp = list(tup)` <br/> `temp.append(4)` <br/> `tup = tuple(temp)` <br/> `print(tup)` |
+
+## Python - Unpack Tuple Items
+The term "unpacking" refers to the process of parsing `tuple` items in individual `variables`. 
+| Method | Description | Example |
+|--------|-------------|---------|
+| **Tuple Unpacking** | The process of assigning tuple items into individual variables. | `tup1 = (10, 20, 30)` <br/> `x, y, z = tup1` <br/> `print(x, y, z)` |
+| **Extended Tuple Unpacking** | Uses `*` to collect multiple values into a list variable. | `tup1 = (10, 20, 30, 40, 50, 60)` <br/> `x, *y, z = tup1` <br/> `print("x:", x, "y:", y, "z:", z)` |
+
+
+## Python - Loop Tuples
+
+| Method | Description | Example |
+|--------|-------------|---------|
+| **Loop Through Tuple Items with For Loop** | Iterates through tuple items using a `for` loop. <br/><br/> **Syntax:** `for item in tuple:` | `tup = (1, 2, 3)` <br/> `for item in tup:` <br/> `    print(item)` |
+| **Loop Through Tuple Items with While Loop** | Iterates through tuple items using a `while` loop and index values. <br/><br/> **Syntax:** `while condition:` | `tup = (1, 2, 3)` <br/> `i = 0` <br/> `while i < len(tup):` <br/> `    print(tup[i])` <br/> `    i += 1` |
+| **Loop Through Tuple Items with Index** | Uses `range()` and indexes to iterate through tuple items. | `tup = (1, 2, 3)` <br/> `for i in range(len(tup)):` <br/> `    print(tup[i])` |
+
+## Python - Join Tuples
+
+| Method | Description | Example |
+|--------|-------------|---------|
+| **Joining Tuples Using Concatenation ("+") Operator** | Combines tuples using the `+` operator. | `t1 = (1, 2)` <br/> `t2 = (3, 4)` <br/> `result = t1 + t2` <br/> `print(result)` |
+| **Joining Tuples Using List Comprehension** | Creates a tuple by iterating through multiple tuples. | `t1 = (1, 2)` <br/> `t2 = (3, 4)` <br/> `result = tuple(x for x in t1 + t2)` <br/> `print(result)` |
+| **Joining Tuples Using extend() Function** | Converts tuples into a list, uses `extend()`, then converts back into a tuple. | `t1 = (1, 2)` <br/> `t2 = (3, 4)` <br/> `temp = list(t1)` <br/> `temp.extend(t2)` <br/> `result = tuple(temp)` |
+| **Join Tuples using sum() Function** | Uses `sum()` to concatenate tuples. <br/><br/> **Syntax:** `result_tuple = sum((tuple1, tuple2), ())` | `t1 = (1, 2)` <br/> `t2 = (3, 4)` <br/> `result = sum((t1, t2), ())` <br/> `print(result)` |
+| **Joining Tuples using for Loop** | Uses a loop to add tuple items one by one. | `T1 = (10,20,30,40)` <br/> `T2 = ('one', 'two', 'three', 'four')` <br/> `for t in T2:` <br/> `    T1 += (t,)` <br/> `print(T1)` |
+
+## Listing All the Tuple Methods
+```py
+print(dir((1, 2)))
+print(help((1, 2).index))
+
+```
+
+## Python Tuple Methods
+| Sr.No | Method & Description | Example |
+|------|----------------------|---------|
+| 1 | `tuple.count(obj)` <br/> Returns the number of times an object occurs in the tuple. | `tup = (1, 2, 2, 3, 2)` <br/> `tup.count(2)` → `3` |
+| 2 | `tuple.index(obj)` <br/> Returns the lowest index where the object appears in the tuple. | `tup = (10, 20, 30, 20)` <br/> `tup.index(20)` → `1` |
+
+
+	
+
+
+
+## Python Tuple Operations
+
+|Python  Expression	| Results |	Description |
+|-----------|------------|--------------|
+|(1, 2, 3) + (4, 5, 6) |	(1, 2, 3, 4, 5, 6)|	Concatenation |
+|('Hi!',) * 4	| ('Hi!', 'Hi!', 'Hi!', 'Hi!')|	Repetition |
+|3 in (1, 2, 3) |	True |	Membership |
+
+
+## Built-in Functions with Tuples
+
+| Sr.No | Function & Description | Example |
+|------|------------------------|---------|
+| 1 | `cmp(tuple1, tuple2)` <br/> Compares elements of both tuples. | `cmp((1, 2), (1, 3))` → `-1` |
+| 2 | `len(tuple)` <br/> Returns the total number of elements in the tuple. | `len((1, 2, 3))` → `3` |
+| 3 | `max(tuple)` <br/> Returns the largest item in the tuple. | `max((1, 5, 3))` → `5` |
+| 4 | `min(tuple)` <br/> Returns the smallest item in the tuple. | `min((1, 5, 3))` → `1` |
+| 5 | `tuple(seq)` <br/> Converts a sequence such as a list into a tuple. | `tuple([1, 2, 3])` → `(1, 2, 3)` |
+
+

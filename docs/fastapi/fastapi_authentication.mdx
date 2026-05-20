@@ -1,0 +1,124 @@
+---
+id : fastapi_authentication
+title: FastAPI - Authentication
+---
+## PassWord hasing
+```bash
+pip install passlib
+```
+```py
+
+from passlib.context import CryptContext
+password = "my_password"
+ctx = CryptContext(schemes=["bcrypt"])
+ctx.hash(password)
+#incase if you are getting any error ten add deprecated
+ctx = CryptContext(schemes=["bcrypt"], deprecated='auto')
+ctx.hash(password)
+
+
+#Verification
+hashpassword_from_db=
+user_password="my_password"
+ctx.verify('user_password',hashpassword_from_db )
+
+```
+
+## Login
+Get Credential then validate fillany send the JWT
+```py title='main.py'
+from typing import Annotated
+from fastapi import FastAPI, Depends
+app = FastAPI(title="User")
+@app.post("/token")
+async def token(
+    request_form: Annotated[OAuth2PasswordRequestForm, Depends()]
+):
+
+    ## UserService.verify(request_form.username,request_form.password)
+    ## convert to jwt
+    token = "encoded jwt"
+    return {"access_token": request_form.username, "type": "jwt"}
+
+```
+login or token url is '/token' use this for otuth2schemas in futures
+
+## Oauth2Schemas 
+help to pass the token to header
+
+├── api/            
+│── core/ 
+│   ├── security.py            # Common dependencies for API routes
+│  
+|── main.py
+
+```py title='core/security.py'
+from fastapi.security import OAuth2PasswordBearer
+
+oauth2_schemas = OAuth2PasswordBearer("/token")
+```
+
+then
+```py title='main.p'
+from core.security import oauth2_schemas
+@app.get("/dashboard")
+def dashboard(token: Annotated[str, Depends(oauth2_schemas)]):
+    return {'Token':token}
+
+```
+now what will happen is once you login the generated token passed to this endpoint also 
+using that token we have decript and find the return user like
+
+```py title='main.p'
+from core.security import oauth2_schemas
+@app.get("/dashboard")
+def dashboard(token: Annotated[str, Depends(oauth2_schemas)], session:SessionDep):
+    #data = jwt_decrpt(token)
+    seller = session.get(Model,data['user_pk_id'])
+    return {'user_info':seller}
+```
+```json
+ex: payload jwt
+data = {
+    "user_pk_id":1,
+    "user":"Vignesh"
+}
+```
+
+so the sameway other enpoint point also we can protect but same code will repeat
+
+so see below
+
+```py title='api/deps.py'
+# Access Token data dep
+def get_access_token(token: Annotated[str, Depends(oauth2_schemas)])->dict:
+    payload decord_jwt(token)
+    if not payload:
+        raise httpexption(404, detail="Invaid token")
+    return payload
+
+
+# Logged in seller
+def get_currect_seller(token_data:Annotated[dict,Depends(get_access_token)], session:SessionDep):
+    return await session.get(Seller, token_data["user_pk_id"])
+
+
+# Create Dep
+SellerDep = Annotated[Seller, Depends(get_currect_seller)]    
+```
+
+then in wherver you want add this dep so without Authentication you can't access the endpoint
+ex
+```py title='main.py'
+from api.deps import SellerDep
+from
+@app.get("/dashboard")
+def dashboard(seller: SellerDep):
+    return {'Token':token}
+
+```
+
+
+
+
+

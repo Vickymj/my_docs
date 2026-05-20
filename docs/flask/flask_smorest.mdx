@@ -1,0 +1,116 @@
+---
+id: flask_smorest
+title: Flask - Smorest
+---
+
+### Error Handling
+Using flask_smorest.abort instead of returning errors manually
+
+```py
+@app.get("/store/<string:name>")
+def get_store(name):
+    for store in stores:
+        if store["name"] == name:
+            return store
+    return {"message": "Store not found"}, 404
+```
+Add this import at the top of app.py:
+```py
+from flask_smorest import abort
+
+```
+And then let's change our error returns to use abort.
+```py title='app.py'
+@app.get("/store/<string:name>")
+def get_store(name):
+    for store in stores:
+        if store["name"] == name:
+            return store
+        abort(404, message="Store not found.")
+    
+```
+
+How to use Flask-Smorest MethodViews and Blueprints
+
+```text
+docs/
+├── intro.md
+├── git/
+│   └── git.md
+├── docker/
+│   └── docker.md
+└── linux/
+    └── linux.md
+    ```
+```text
+
+resources/
+|-- items
+|-- stores
+```
+
+```py title='resources/store.py'
+from flask.views import MethodView
+from flask_smorest import Blueprint, abort
+
+
+blp = Blueprint("stores", __name__, description="Operations on stores")
+```
+:::info
+
+- `stores` is the name of the blueprint. This will be shown in the documentation and is prepended to the endpoint names when you use url_for (we won't use it).
+- `__name__` is the "import name.
+- The description will be shown in the documentation UI.
+:::
+
+Now that we've got this, let's add our MethodViews. These are classes where each method maps to one endpoint. The interesting thing is that method names are important:
+
+```py title='resources/store.py'
+@blp.route("/store/<string:store_id>")
+class Store(MethodView):
+    def get(self, store_id):
+        pass
+
+    def delete(self, store_id):
+        pass
+```
+
+Two things are going on here:
+
+- The endpoint is associated to the MethodView class.Here, the class is called Store and the endpoint is `/store/<string:store_id>`.
+- There are two methods inside the Store class: get and delete. These are going to map directly to GET `/store/<string:store_id>` and DELETE `/store/<string:store_id>`.
+
+
+
+### Import blueprints and Flask-Smorest configuration
+
+```py title='app.py'
+from flask import Flask
+from flask_smorest import Api
+
+from resources.item import blp as ItemBlueprint
+from resources.store import blp as StoreBlueprint
+
+
+app = Flask(__name__)
+
+app.config["PROPAGATE_EXCEPTIONS"] = True
+app.config["API_TITLE"] = "Stores REST API"
+app.config["API_VERSION"] = "v1"
+app.config["OPENAPI_VERSION"] = "3.0.3"
+app.config["OPENAPI_URL_PREFIX"] = "/"
+app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
+app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
+
+api = Api(app)
+
+api.register_blueprint(ItemBlueprint)
+api.register_blueprint(StoreBlueprint)
+
+```
+
+- I've also added a few config variables to the app.config. The PROPAGATE_EXCEPTIONS value is used so that when an exception is raised in an extension, it is bubbled up to the main Flask app so you'd see it more easily.
+
+- The other config values are there for the documentation of our API, and they define things such as the API name and version, as well as information for the Swagger UI.
+
+- Now you should be able to go to http://127.0.0.1:5000/swagger-ui and see your Swagger documentation rendered out!

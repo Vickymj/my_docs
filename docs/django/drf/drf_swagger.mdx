@@ -1,0 +1,119 @@
+---
+
+id: drf_swagger
+title:  DRF - Swagger
+---
+
+Step 1: Install
+```bash
+pip install drf-spectacular
+```
+Step 2: Update settings.py
+```py
+INSTALLED_APPS = [
+    ...
+    'rest_framework',
+    'drf_spectacular',
+]
+```
+🔧 Add DRF Config
+```py
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+```
+
+🔧 Add Spectacular Settings (optional but recommended)
+```py
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'My API',
+    'DESCRIPTION': 'CRUD API using dict',
+    'VERSION': '1.0.0',
+}
+```
+
+🔹 Step 3: Configure URLs
+
+In your main `urls.py`:
+
+```py
+from django.contrib import admin
+from django.urls import path, include
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularSwaggerView,
+    SpectacularRedocView,
+)
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+
+    # your API
+    path('api/', include('your_app.urls')),
+
+    # schema
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+
+    # Swagger UI
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema')),
+
+    # Redoc UI (optional)
+    path('api/redoc/', SpectacularRedocView.as_view(url_name='schema')),
+]
+```
+
+🔥 Step 4: Run Server
+
+```bash
+python manage.py runserver
+```
+Open
+👉 http://127.0.0.1:8000/api/docs/
+
+🔥 Step 5: Improve Your Docs (IMPORTANT)
+
+✅ Add Documentation to Your Views
+
+```py
+from drf_spectacular.utils import extend_schema
+from .serializers import UserSerializer
+```
+
+🔹 For POST (Create)
+
+
+```py
+
+@extend_schema(
+    request=UserSerializer,
+    responses=UserSerializer
+)
+@api_view(['POST'])
+def users(request):
+    ...
+```
+
+
+🔹 For Detail View
+
+```py
+
+
+@extend_schema(
+    request=UserSerializer,
+    responses=UserSerializer
+)
+@api_view(['PUT'])
+def user_detail(request, user_id):
+    ...
+```
+
+🔥 Bonus: Show List Response Properly
+```py
+@extend_schema(
+    responses=UserSerializer(many=True)
+)
+@api_view(['GET'])
+def users(request):
+    ...
+```

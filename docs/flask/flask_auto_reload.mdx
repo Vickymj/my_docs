@@ -1,0 +1,102 @@
+---
+id: flask_auto_reload
+title: Flask - Auto Reload
+description: Learn how to enable auto-reload in Flask during development using CLI, script, or environment variables.
+---
+
+Flask provides built-in support for **auto-reloading**, which automatically restarts the server whenever you make changes to your code. This is extremely useful during development.
+
+---
+
+## 🚀 Method 1: Using the Flask CLI (Recommended)
+
+```bash
+flask --app main run --debug
+```
+
+### 🔹 Explanation
+- `--app`: Specifies your main application module (e.g., `app` or `main`)
+- `run`: Starts the development server
+- `--debug`: Enables:
+  - Auto-reloader
+  - Interactive debugger
+
+---
+
+## 🧠 Method 2: Running via Python Script
+
+```py
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return {"message": "API is running"}
+
+if __name__ == "__main__":
+    # Enables auto-reload and debugger
+    app.run(debug=True)
+```
+
+---
+
+## ⚙️ Method 3: Using Environment Variables
+
+Create a `.flaskenv` file in your project root:
+
+```bash title=".flaskenv"
+FLASK_APP=app
+FLASK_DEBUG=1
+```
+
+Then run:
+
+```bash
+flask run
+```
+
+### ℹ️ Notes
+- `FLASK_DEBUG=1` enables debug mode and auto-reload
+- In **Flask 2.3+**, `FLASK_ENV` is deprecated  
+- Prefer using the `--debug` flag for modern setups
+
+---
+
+## ⚠️ Important Warning
+
+:::danger 
+Do Not Use Debug in Production
+Never enable `debug=True` or `--debug` in production.
+
+It can:
+- Expose sensitive application data
+- Allow arbitrary code execution via the debugger
+:::
+
+---
+
+## 💡 Tips & Best Practices
+
+- ✅ Use **CLI (`--debug`)** for cleaner and modern development workflow  
+- ✅ Keep `.flaskenv` for local development convenience  
+- ✅ Use **environment-based configs** for better control (dev vs prod)  
+- ✅ Auto-reload works by **watching file changes** and restarting the server automatically  
+
+---
+
+## 🧪 Quick Comparison
+
+| Method              | Use Case                  | Recommended |
+|--------------------|--------------------------|------------|
+| Flask CLI          | Modern development       | ✅ Yes     |
+| Python Script      | Simple/testing setups    | ⚠️ Limited |
+| Environment Config | Legacy / automation      | ⚠️ Optional |
+
+---
+
+## ✅ Summary
+
+- Use `flask --app main run --debug` for development  
+- Avoid debug mode in production  
+- Auto-reload improves productivity by eliminating manual restarts  

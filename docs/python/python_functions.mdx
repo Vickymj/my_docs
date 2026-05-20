@@ -1,0 +1,395 @@
+---
+id: python_functions
+title: Python - Functions
+---
+
+# Python Functions
+
+Python functions are reusable blocks of code that perform a specific task. Functions help improve code organization, readability, and reusability.
+
+---
+
+# Defining a Python Function
+
+A function in Python is defined using the `def` keyword.
+
+```py
+def function_name(parameters):
+    "function_docstring"
+    function_suite
+    return [expression]
+```
+
+## Example
+
+```py title="example.py"
+def greetings():
+    "This is the docstring of greetings function"
+    print("Hello World")
+    return
+```
+
+### Explanation
+
+- `def` → Keyword used to define a function
+- `greetings` → Function name
+- `()` → Parameters list
+- `docstring` → Description of the function
+- `return` → Sends a value back from the function
+
+---
+
+# Function Calling Mechanisms
+
+## Call by Value
+
+In call by value:
+
+- A copy of the variable’s value is passed to the function
+- Changes made inside the function do **not** affect the original variable
+
+## Call by Reference
+
+In call by reference:
+
+- A reference to the original object is passed
+- Changes made inside the function affect the original object
+
+Python uses **object reference passing**.
+
+- Immutable objects (`int`, `str`, `tuple`) behave like call by value
+- Mutable objects (`list`, `dict`, `set`) can be modified inside functions
+
+## Example
+
+```py
+def testfunction(arg):
+    print("ID inside the function:", id(arg))
+    arg = arg + 1
+    print("New object after increment:", arg, id(arg))
+
+var = 10
+
+print("ID before passing:", id(var))
+testfunction(var)
+print("Value after function call:", var)
+```
+
+### Output Behavior
+
+- Since integers are immutable, `arg = arg + 1` creates a new object
+- Original variable `var` remains unchanged
+
+---
+
+# Types of Python Function Arguments
+
+Python supports different types of arguments.
+
+## 1. Positional (Required) Arguments
+
+Arguments are passed in the correct positional order.
+
+```py
+def add(a, b):
+    return a + b
+
+print(add(10, 20))
+```
+
+---
+
+## 2. Keyword Arguments
+
+Arguments are passed using parameter names.
+
+```py
+def student(name, age):
+    print(name, age)
+
+student(age=21, name="John")
+```
+
+---
+
+## 3. Default Arguments
+
+Default values are used when arguments are not provided.
+
+```py
+def greet(name="Guest"):
+    print("Hello", name)
+
+greet()
+greet("Alice")
+```
+
+## Mutable Objects as Default Arguments
+
+Default arguments are evaluated only once when the function is defined.
+
+Using mutable objects as defaults can lead to unexpected behavior.
+
+```py
+def fcn(nums, numericlist=[]):
+    numericlist.append(nums + 1)
+    print(numericlist)
+
+# Function calls
+fcn(66)
+fcn(68)
+fcn(70)
+```
+
+### Output
+
+```py
+[67]
+[67, 69]
+[67, 69, 71]
+```
+
+### Why This Happens
+
+The same list object is reused across function calls.
+
+### Recommended Approach
+
+```py
+def fcn(nums, numericlist=None):
+    if numericlist is None:
+        numericlist = []
+
+    numericlist.append(nums + 1)
+    print(numericlist)
+```
+
+---
+
+## 4. Arbitrary or Variable-Length Arguments
+
+Python allows functions to accept any number of arguments.
+
+### `*args` — Arbitrary Positional Arguments
+
+```py
+def total(*numbers):
+    print(numbers)
+
+total(1, 2, 3, 4)
+```
+
+### `**kwargs` — Arbitrary Keyword Arguments
+
+```py
+def details(**data):
+    print(data)
+
+details(name="Alice", age=25)
+```
+
+---
+
+# Function Annotations
+
+Function annotations provide metadata about parameters and return values.
+
+```py
+def myfunction(a: int, b: int) -> int:
+    c = a + b
+    return c
+
+print(myfunction(56, 88))
+print(myfunction.__annotations__)
+```
+
+## Output
+
+```py
+144
+{'a': <class 'int'>, 'b': <class 'int'>, 'return': <class 'int'>}
+```
+
+---
+
+# Function Annotations with Expressions
+
+Annotations can also contain descriptive strings.
+
+```py
+def total(x: 'marks in Physics', y: 'marks in Chemistry'):
+    return x + y
+
+print(total(86, 88))
+print(total.__annotations__)
+```
+
+---
+
+# Python Modules
+
+A module is a Python file containing functions, classes, and variables.
+
+## Listing Module Members
+
+```py
+print(dir(modulename))
+
+# Example
+print(dir(str))
+```
+
+---
+
+## `from ... import *`
+
+Imports everything from a module.
+
+```py
+from modname import *
+```
+
+---
+
+## `import ... as`
+
+Imports a module using an alias.
+
+```py
+import math as m
+
+print(m.sqrt(25))
+```
+
+---
+
+# Module Attributes
+
+Python modules contain built-in attributes.
+
+```py
+import mymodule
+
+print("__file__ attribute:", mymodule.__file__)
+print("__doc__ attribute:", mymodule.__doc__)
+print("__name__ attribute:", mymodule.__name__)
+```
+
+## Common Module Attributes
+
+| Attribute | Description |
+|---|---|
+| `__file__` | Path of the module file |
+| `__doc__` | Module documentation string |
+| `__name__` | Name of the module |
+
+---
+
+# Packages in Python
+
+A package is a collection of Python modules organized in directories.
+
+## Example Structure
+
+```text
+mypackage/
+│
+├── __init__.py
+├── mathutils.py
+└── stringutils.py
+```
+
+Packages help organize large projects into manageable components.
+
+---
+
+# Packing and Unpacking in Python
+
+## Packing Example
+
+Packing collects multiple values into a single variable.
+
+```py
+def pack_example(*args):
+    print("Packed arguments:", args)
+
+pack_example(1, 2, 3, 'a', 'b')
+```
+
+---
+
+## Unpacking Example
+
+Unpacking extracts values from a collection.
+
+```py
+def unpack_example(a, b, c):
+    print("Unpacked arguments:", a, b, c)
+
+values = [1, 2, 3]
+
+unpack_example(*values)
+```
+
+---
+
+
+
+
+
+## List of Python Built-in Functions
+
+| Method | Syntax | Description | Example |
+|---|---|---|---|
+| Python `all()` function | `all(iterable)` | Evaluates whether all elements in an iterable are truthy.<br /><br />Returns `True` if all items are truthy, otherwise returns `False`. | `numerics = [71, 87, 44, 34, 15, "", 5]` <br /> `output = all(numerics)` <br /> `print(output)` <br /> Output → `False` |
+| Python `any()` function | `any(iterable)` | Returns `True` if at least one element in the iterable is truthy. Otherwise, returns `False`. | `values = [0, False, "", 25]` <br /> `output = any(values)` <br /> `print(output)` <br /> Output → `True` |
+| Python `bool()` function | `bool(value)` | Converts a value into a Boolean (`True` or `False`). | `value = bool(10)` <br /> `print(value)` <br /> Output → `True` |
+| Python `callable()` function | `callable(object)` | Checks if the object is callable. | `def greet(): pass` <br /> `print(callable(greet))` <br /> Output → `True` |
+| Python `delattr()` function | `delattr(object, name)` | Deletes an attribute from the object. | `class Student:` <br /> `    name = "John"` <br /> `delattr(Student, 'name')` |
+| Python `dict()` function | `dict(**kwargs)` | Creates a dictionary. | `student = dict(name="John", age=21)` <br /> `print(student)` <br /> Output → `{'name': 'John', 'age': 21}` |
+| Python `dir()` function | `dir(object)` | Returns attributes and methods of an object. | `numbers = [1, 2, 3]` <br /> `print(dir(numbers))` |
+| Python `enumerate()` function | `enumerate(iterable, start=0)` | Returns an enumerate object with index and value pairs. | `fruits = ["apple", "banana"]` <br /> `list(enumerate(fruits))` <br /> Output → `[(0, 'apple'), (1, 'banana')]` |
+| Python `eval()` function | `eval(expression)` | Runs Python expression within the program. | `result = eval("5 + 10")` <br /> `print(result)` <br /> Output → `15` |
+| Python `exec()` function | `exec(object)` | Executes dynamically created Python code. | `code = 'print("Hello")'` <br /> `exec(code)` <br /> Output → `Hello` |
+| Python `filter()` function | `filter(function, iterable)` | Constructs an iterator from elements that return `True`. | `nums = [1, 2, 3, 4]` <br /> `even = list(filter(lambda x: x % 2 == 0, nums))` <br /> Output → `[2, 4]` |
+| Python `float()` function | `float(value)` | Converts a number or string into a floating-point number. | `num = float("25.5")` <br /> `print(num)` <br /> Output → `25.5` |
+| Python `format()` function | `format(value, format_spec)` | Returns formatted representation of a value. | `price = format(1234.5678, ".2f")` <br /> `print(price)` <br /> Output → `1234.57` |
+| Python `frozenset()` function | `frozenset(iterable)` | Returns an immutable frozenset object. | `items = frozenset([1, 2, 3])` <br /> `print(items)` <br /> Output → `frozenset({1, 2, 3})` |
+| Python `getattr()` function | `getattr(object, name)` | Returns value of named attribute of an object. | `class Person:` <br /> `    name = "Alice"` <br /> `print(getattr(Person, "name"))` <br /> Output → `Alice` |
+| Python `globals()` function | `globals()` | Returns dictionary of current global symbol table. | `x = 100` <br /> `print(globals())` |
+| Python `hasattr()` function | `hasattr(object, name)` | Returns whether object has named attribute. | `class Car:` <br /> `    brand = "Toyota"` <br /> `print(hasattr(Car, "brand"))` <br /> Output → `True` |
+| Python `hash()` function | `hash(object)` | Returns hash value of an object. | `text = "Python"` <br /> `print(hash(text))` |
+| Python `help()` function | `help(object)` | Invokes the built-in help system. | `help(len)` |
+| Python `id()` function | `id(object)` | Returns identity of an object. | `x = 10` <br /> `print(id(x))` |
+| Python `input()` function | `input(prompt)` | Reads and returns a line of string from user input. | `name = input("Enter name: ")` <br /> `print(name)` |
+| Python `int()` function | `int(value)` | Converts a number or string into an integer. | `num = int("25")` <br /> `print(num)` <br /> Output → `25` |
+| Python `isinstance()` function | `isinstance(object, classinfo)` | Checks if an object is an instance of a class. | `print(isinstance(10, int))` <br /> Output → `True` |
+| Python `issubclass()` function | `issubclass(class, classinfo)` | Checks if a class is subclass of another class. | `class Animal: pass` <br /> `class Dog(Animal): pass` <br /> `print(issubclass(Dog, Animal))` <br /> Output → `True` |
+| Python `iter()` function | `iter(object)` | Returns an iterator object. | `nums = [1, 2, 3]` <br /> `itr = iter(nums)` <br /> `print(next(itr))` <br /> Output → `1` |
+| Python `len()` function | `len(object)` | Returns length of an object. | `text = "Python"` <br /> `print(len(text))` <br /> Output → `6` |
+| Python `list()` function | `list(iterable)` | Creates a list in Python. | `values = list((1, 2, 3))` <br /> `print(values)` <br /> Output → `[1, 2, 3]` |
+| Python `locals()` function | `locals()` | Returns dictionary of current local symbol table. | `def demo():` <br /> `    x = 10` <br /> `    print(locals())` |
+| Python `map()` function | `map(function, iterable)` | Applies a function and returns a map object. | `nums = [1, 2, 3]` <br /> `squared = list(map(lambda x: x**2, nums))` <br /> Output → `[1, 4, 9]` |
+| Python `next()` function | `next(iterator)` | Retrieves next item from the iterator. | `nums = iter([1, 2, 3])` <br /> `print(next(nums))` <br /> Output → `1` |
+| Python `object()` function | `object()` | Creates a featureless object. | `obj = object()` <br /> `print(obj)` |
+| Python `property()` function | `property(fget, fset)` | Returns the property attribute. | `class Student:` <br /> `    @property` <br /> `    def name(self):` <br /> `        return "John"` |
+| Python `range()` function | `range(start, stop, step)` | Returns a sequence of integers. | `list(range(1, 5))` <br /> Output → `[1, 2, 3, 4]` |
+| Python `repr()` function | `repr(object)` | Returns printable representation of the object. | `text = "Python"` <br /> `print(repr(text))` <br /> Output → `'Python'` |
+| Python `reversed()` function | `reversed(sequence)` | Returns the reversed iterator of a sequence. | `nums = [1, 2, 3]` <br /> `list(reversed(nums))` <br /> Output → `[3, 2, 1]` |
+| Python `set()` function | `set(iterable)` | Constructs and returns a set. | `nums = set([1, 2, 2, 3])` <br /> `print(nums)` <br /> Output → `{1, 2, 3}` |
+| Python `setattr()` function | `setattr(object, name, value)` | Sets the value of an attribute of an object. | `class Person: pass` <br /> `p = Person()` <br /> `setattr(p, "age", 25)` <br /> `print(p.age)` <br /> Output → `25` |
+| Python `slice()` function | `slice(start, stop, step)` | Returns a slice object. | `text = "Python"` <br /> `print(text[slice(1, 4)])` <br /> Output → `yth` |
+| Python `sorted()` function | `sorted(iterable)` | Returns a sorted list from the given iterable. | `nums = [5, 2, 8, 1]` <br /> `print(sorted(nums))` <br /> Output → `[1, 2, 5, 8]` |
+| Python `str()` function | `str(object)` | Returns the string version of the object. | `num = 100` <br /> `print(str(num))` <br /> Output → `'100'` |
+| Python `super()` function | `super()` | Returns a proxy object of the base class. | `class Parent:` <br /> `    def show(self): print("Parent")` <br /> `class Child(Parent):` <br /> `    def show(self):` <br /> `        super().show()` |
+| Python `tuple()` function | `tuple(iterable)` | Returns a tuple. | `nums = tuple([1, 2, 3])` <br /> `print(nums)` <br /> Output → `(1, 2, 3)` |
+| Python `type()` function | `type(object)` | Returns the type of the object. | `x = 10` <br /> `print(type(x))` <br /> Output → `<class 'int'>` |
+| Python `zip()` function | `zip(iterable1, iterable2)` | Returns an iterator of tuples. | `names = ["John", "Alice"]` <br /> `ages = [21, 25]` <br /> `list(zip(names, ages))` <br /> Output → `[('John', 21), ('Alice', 25)]` |
+| Python `__import__()` function | `__import__(name)` | Function called by the import statement. | `math_module = __import__('math')` <br /> `print(math_module.sqrt(16))` <br /> Output → `4.0` |
+
+
+## Build In Funciton Explaination:
+
+
+
+## REF :https://www.tutorialspoint.com/python/python_built_in_functions.htm

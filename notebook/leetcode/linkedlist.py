@@ -1,4 +1,11 @@
+
 class Node:
+    """
+    Create Node for LinkedList
+head ⬇️              ⬇️ tail
+    [A] ---> [B] ---->[C]--> None
+
+    """
     def __init__(self, value):
         self.value = value
         self.next = None
@@ -13,7 +20,21 @@ class LinkedList:
         while temp is not None:
            print(temp.value)
            temp = temp.next
+
     def append(self, value):
+        """
+ head ⬇️              ⬇️ tail
+     [A] ---> [B] --->[C]--> None
+                            [D]⬆️
+
+
+
+     head ⬇️                   ⬇️ tail
+     [A] ---> [B] ----> [C]--> [D] ---> None
+
+
+
+        """
         new_node = Node(value)
         if self.length ==0:
             self.head = new_node
@@ -22,29 +43,167 @@ class LinkedList:
             self.tail.next = new_node
             self.tail= new_node
         self.length +=1
+        return True
+    
     def pop(self):
+        """
+    Prev ⬇️     ⬇️temp
+        [A] --> [B]-->None
+
+        [A] --> None
+        """
+        
         if self.length == 0:
             return None
         temp = self.head
-        pre = self.head
-        while temp.next:
-            pre = temp
+        prev = self.head
+        while (temp.next):
+            prev = temp
             temp = temp.next
-        self.tail = pre
+        self.tail = prev
         self.tail.next = None
-        self.length -=1
+        self.length -= 1
         if self.length == 0:
             self.head = None
-            self.tail =None
+            self.tail = None
         return temp
+
     def prepend(self,value):
+        """
+        head ⬇️              ⬇️ tail
+            [A] ---> [B] --->[C]--> None
+           [D]⬆️                
+
+
+
+     ⬇️ head                   ⬇️ tail
+     [D]--->[A] ---> [B] ----> [C]---> None
+        """
         new_node = Node(value)
         if self.length == 0:
-            self.tail = None
+            self.tail = new_node
+            self.head = new_node
         else:
             new_node.next = self.head
             self.head = new_node
         self.length +=1
+
+    def pop_first(self):
+        """
+            head⬇️   tail⬇️  
+        temp --> [A]-->[B]-->None
+                   ⬇️ head|tail
+        [A]--None [B]--None
+
+        #only one data
+
+            head⬇️tail
+      temp-->  [B]-->None
+
+
+        
+        """
+        if self.length == 0:
+            return None
+        temp = self.head
+        self.head = self.head.next
+        temp.next = None
+        self.length -= 1
+        if self.length == 0:
+            self.tail = None
+        return temp
+    
+    def get(self, index):
+        """
+   temp --->[A] ---> [B] ----> [C] ---> [D]
+             0       1           2       3
+
+        
+        """
+        if index <0 or self.length <= index:
+            return None
+        temp = self.head
+        for _ in range(index):
+            temp = temp.next
+        return temp
+    def set_value(self,index ,value):
+        temp = self.get(index)
+        if temp:
+            temp.value = value
+            return True
+        return False
+    
+    def insert(self, index, value):
+       
+        if index < 0 or index > self.length:
+            return False
+        if index == 0:
+            return self.prepend(value)
+        if index == self.length:
+            return self.append(value)
+        new_node = Node(value)
+        temp = self.get(index-1)
+        new_node.next =temp.next
+        temp.next = new_node
+        self.length += 1
+    def remove(self, index):
+        if index < 0 or index >= self.length:
+            return None
+        if index == 0:
+            return self.pop_first(index)
+        if index == self.length:
+            return self.pop(index)
+        prev = self.get(index-1)
+        temp = prev.next
+        prev.next = temp.next
+        temp.next = None
+        self.length -=1
+        return temp
+
+    def reverse(self):
+        """
+               ⬇️head         ⬇️tail
+        temp-->[A]----> [B]--->[C]---None
+
+    before⬇️   ⬇️temp  ⬇️next
+        None--->[A] --> [B] --> [C] ---> None
+                ⬆️tail          ⬆️head
+
+
+        None <---[A] <--- B <----[C]
+
+        """
+        temp = self.head
+        self.head = self.tail
+        self.tail = temp
+        before = None
+        after = temp.next
+        
+        for _ in range(self.length):
+            after = temp.next
+            temp.next = before
+            before = temp
+            temp = after
+
+
+        
+
+        
+        
+        
+
+
+        
+    
+
+
+    
+        
+
+            
+
+
+
         
 
     

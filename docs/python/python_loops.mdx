@@ -1,0 +1,103 @@
+---
+id : python_loops
+title : Python - Loops
+---
+
+## Types of Loops in Python
+
+
+1 `while loop` Repeats a statement or group of statements while a given condition is TRUE. It tests the condition before executing the loop body.|
+
+2	`for loop` Executes a sequence of statements multiple times and abbreviates the code that manages the loop variable.
+
+3	`nested loops` You can use one or more loop inside any another while, for or do..while loop.
+
+## Python Loop Control Statements
+
+1	`break statement` Terminates the loop statement and transfers execution to the statement immediately following the loop.
+
+2	`continue statement` Causes the loop to skip the remainder of its body and immediately retest its condition prior to reiterating.
+
+3	`pass statement` The pass statement in Python is used when a statement is required syntactically but you do not want any command or code to execute.
+
+
+## Syntax of Python for Loop
+```py
+for iterating_var in sequence:
+   statement(s)
+```
+### Python for Loop with Strings
+```py 
+zen = '''
+Beautiful is better than ugly.
+Explicit is better than implicit.
+Simple is better than complex.
+Complex is better than complicated.
+'''
+for char in zen:
+   if char not in 'aeiou':
+      print (char, end='')
+```
+
+Python for Loop with Tuples
+Python for Loop with Lists
+Python for Loop with Range Objects
+```py title='syntax'
+range(start, stop, step)
+```
+Python for Loop with Dictionaries
+Using else Statement with For Loop
+```py
+
+
+for variable_name in iterable:
+ #stmts in the loop
+ .
+ .
+ .
+else:
+ #stmts in else clause
+ .
+ .
+
+
+for count in range(6):
+   print ("Iteration no. {}".format(count))
+else:
+   print ("for loop over. Now in else block")
+print ("End of for loop")
+```
+
+
+## Python while Loop
+```py
+while expression:
+   statement(s)
+```
+Syntax of break Statement
+```py
+looping statement:
+   condition check:
+      break
+```
+Syntax of continue Statement
+```py
+looping statement:
+   condition check:
+      continue
+
+for letter in 'Python':
+   if letter == 'h':
+      continue
+   print ('Current Letter :', letter)
+print ("Good bye!")
+```
+
+
+## Python Nested for Loop
+```py
+for iterating_var in sequence:
+   for iterating_var in sequence:
+      statements(s)
+   statements(s)
+```

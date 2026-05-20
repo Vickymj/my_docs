@@ -1,0 +1,143 @@
+---
+id : fastapi_structured
+title : FastAPI - Bigger Applications - Multiple Files
+---
+
+## APIRouter
+```
+├── api/                   # API routes grouped by version or feature
+│   ├── __init__.py
+│   ├── deps.py            # Common dependencies for API routes
+│   |── endpoints/
+│   |   |
+│   │   ├── __init__.py
+│   │   ├── users.py
+│   │   └── items.py
+│   └── router.py  
+|── main.py
+```
+
+```py title='api/endpoints/users.py'
+
+from fastapi import APIRouter
+
+router = APIRouter()
+
+
+@router.get("/users/", tags=["users"])
+async def read_users():
+    return [{"username": "Rick"}, {"username": "Morty"}]
+
+
+@router.get("/users/me", tags=["users"])
+async def read_user_me():
+    return {"username": "fakecurrentuser"}
+
+
+@router.get("/users/{username}", tags=["users"])
+async def read_user(username: str):
+    return {"username": username}
+```
+Add path route to master router
+
+```py title='api/router.py'
+from fastapi import APIRouter
+from api.endpoints import users
+
+master_router = APIRouter()
+
+master_router.include_router(users.router)
+```
+
+
+Then add master router in main.py
+
+```py title='main.py'
+
+from fastapi import FastAPI
+from app.api.router import master_router
+
+app = FastAPI()
+
+
+app.include_router(master_router)
+
+```
+
+## Service Layer
+to split logic layer and endpoints
+
+```
+├── api/
+├── services/              
+│   ├── __init__.py
+│   ├── users.py      
+│   |── items.py
+|
+|── main.py
+```
+```py title='services/users.py'
+from sqlalchemy.ext.asyncio import AsyncSession
+from models import User
+class UserService:
+    def __init__(self, db:AsyncSession):
+        self.db = db
+    async def get(self, id: int) -> User:
+        return await self.session.get(User, id)
+```
+Add service on routers
+```py title='api/endpoints/users.py'
+from services.users import UserService
+@router.get("/")
+def getuser(id:int , session:SessionDep):
+    return UserService(session).get() 
+
+
+```
+
+### Dependency Chaining
+
+```
+
+├── api/            
+│   ├── __init__.py
+│   ├── deps.py            # Common dependencies for API routes
+│   |── endpoints/
+│   |   |
+│   │   ├── __init__.py
+│   │   ├── users.py
+│   │   └── items.py
+│   └── router.py  
+|── main.py
+```
+```py title='api/deps.py'
+
+from typing import Annotated
+from fastapi import Depends
+from app.db.session import get_session
+from sqlalchemy.ext.asyncio import AsyncSession
+
+# Session dependencies
+SessionDep = Annotated[AsyncSession, Depends(get_session)]
+
+# --- User Service Dep -----
+async def get_user_service(session: SessionDep):
+    return UserService(session)
+
+
+UserDep = Annotated[UserService, Depends(get_user_service)]
+# -------END--------
+
+```
+
+then router file modifies as 
+
+
+```py title='api/endpoints/users.py'
+from services.users import UserService
+@router.get("/")
+def getuser(id:int , service:UserService):
+    return service.get(id)
+
+```
+

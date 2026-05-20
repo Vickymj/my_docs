@@ -1,0 +1,597 @@
+---
+id: fastapi_response_model
+title: FastAPI - Response Model
+---
+
+# FastAPI Response Models
+
+FastAPI uses response models to:
+
+- Validate response data
+- Filter output data
+- Generate Swagger documentation
+- Improve API security
+
+---
+
+# Response Model - Return Type
+
+You can directly specify the return type using Pydantic models.
+
+```python
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+app = FastAPI()
+
+
+class Item(BaseModel):
+    name: str
+    description: str | None = None
+    price: float
+    tax: float | None = None
+    tags: list[str] = []
+
+
+@app.post("/items/")
+async def create_item(item: Item) -> Item:
+    return item
+
+
+@app.get("/items/")
+async def read_items() -> list[Item]:
+    return [
+        Item(name="Portal Gun", price=42.0),
+        Item(name="Plumbus", price=32.0),
+    ]
+```
+
+---
+
+# Add an Output Model
+
+You can use separate input and output models to hide sensitive fields like passwords.
+
+```python
+from typing import Any
+
+from fastapi import FastAPI
+from pydantic import BaseModel, EmailStr
+
+app = FastAPI()
+
+
+class UserIn(BaseModel):
+    username: str
+    password: str
+    email: EmailStr
+    full_name: str | None = None
+
+
+class UserOut(BaseModel):
+    username: str
+    email: EmailStr
+    full_name: str | None = None
+
+
+@app.post("/user/", response_model=UserOut)
+async def create_user(user: UserIn) -> Any:
+    return user
+```
+
+## Benefits
+
+- Hides sensitive data
+- Filters response fields
+- Improves API security
+- Better Swagger documentation
+
+---
+
+# Disable Response Model
+
+You can disable response model generation using `response_model=None`.
+
+```python
+from fastapi import FastAPI, Response
+from fastapi.responses import RedirectResponse
+
+app = FastAPI()
+
+
+@app.get("/portal", response_model=None)
+async def get_portal(teleport: bool = False) -> Response | dict:
+    if teleport:
+        return RedirectResponse(
+            url="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+        )
+
+    return {
+        "message": "Here's your interdimensional portal."
+    }
+```
+
+## Why Use It?
+
+This allows:
+
+- Multiple return types
+- Redirect responses
+- Custom response handling
+- Full control over responses
+
+---
+
+# Response Model Encoding Parameters
+
+FastAPI provides response model filtering options.
+
+```python
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+app = FastAPI()
+
+
+class Item(BaseModel):
+    name: str
+    description: str | None = None
+    price: float
+    tax: float = 10.5
+    tags: list[str] = []
+
+
+items = {
+    "foo": {"name": "Foo", "price": 50.2},
+    "bar": {
+        "name": "Bar",
+        "description": "The bartenders",
+        "price": 62,
+        "tax": 20.2
+    },
+    "baz": {
+        "name": "Baz",
+        "description": None,
+        "price": 50.2,
+        "tax": 10.5,
+        "tags": []
+    },
+}
+
+
+@app.get(
+    "/items/{item_id}",
+    response_model=Item,
+    response_model_exclude_unset=True
+)
+async def read_item(item_id: str):
+    return items[item_id]
+```
+
+---
+
+# response_model_exclude_unset
+
+Using `response_model_exclude_unset=True` removes default values that were not explicitly set.
+
+## Example Response
+
+```json
+{
+  "name": "Foo",
+  "price": 50.2
+}
+```
+
+Only fields actually provided in the data will appear in the response.
+
+---
+
+# response_model_include and response_model_exclude
+
+You can include or exclude specific fields from the response.
+
+```python
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+app = FastAPI()
+
+
+class Item(BaseModel):
+    name: str
+    description: str | None = None
+    price: float
+    tax: float = 10.5
+
+
+items = {
+    "foo": {"name": "Foo", "price": 50.2},
+    "bar": {
+        "name": "Bar",
+        "description": "The Bar fighters",
+        "price": 62,
+        "tax": 20.2
+    },
+    "baz": {
+        "name": "Baz",
+        "description": "There goes my baz",
+        "price": 50.2,
+        "tax": 10.5
+    },
+}
+
+
+@app.get(
+    "/items/{item_id}/name",
+    response_model=Item,
+    response_model_include={"name", "description"},
+)
+async def read_item_name(item_id: str):
+    return items[item_id]
+
+
+@app.get(
+    "/items/{item_id}/public",
+    response_model=Item,
+    response_model_exclude={"tax"}
+)
+async def read_item_public_data(item_id: str):
+    return items[item_id]
+```
+
+---
+
+# Using Lists Instead of Sets
+
+FastAPI automatically converts lists or tuples into sets internally.
+
+```python
+@app.get(
+    "/items/{item_id}/name",
+    response_model=Item,
+    response_model_include=["name", "description"],
+)
+async def read_item_name(item_id: str):
+    return items[item_id]
+```
+
+This also works correctly:
+
+```python
+@app.get(
+    "/items/{item_id}/public",
+    response_model=Item,
+    response_model_exclude=["tax"]
+)
+async def read_item_public_data(item_id: str):
+    return items[item_id]
+```
+
+---
+
+# Extra Models
+
+FastAPI commonly uses multiple models for:
+
+- Input validation
+- Database storage
+- Output filtering
+
+---
+
+# Multiple Models
+
+```python
+from fastapi import FastAPI
+from pydantic import BaseModel, EmailStr
+
+app = FastAPI()
+
+
+class UserIn(BaseModel):
+    username: str
+    password: str
+    email: EmailStr
+    full_name: str | None = None
+
+
+class UserOut(BaseModel):
+    username: str
+    email: EmailStr
+    full_name: str | None = None
+
+
+class UserInDB(BaseModel):
+    username: str
+    hashed_password: str
+    email: EmailStr
+    full_name: str | None = None
+
+
+def fake_password_hasher(raw_password: str):
+    return "supersecret" + raw_password
+
+
+def fake_save_user(user_in: UserIn):
+    hashed_password = fake_password_hasher(user_in.password)
+
+    user_in_db = UserInDB(
+        **user_in.model_dump(),
+        hashed_password=hashed_password
+    )
+
+    print("User saved! ..not really")
+
+    return user_in_db
+
+
+@app.post("/user/", response_model=UserOut)
+async def create_user(user_in: UserIn):
+    user_saved = fake_save_user(user_in)
+    return user_saved
+```
+
+---
+
+# Unpacking a Dictionary
+
+Python allows unpacking dictionaries using `**`.
+
+```python
+user_dict = {
+    "username": "john",
+    "password": "secret",
+    "email": "john@example.com"
+}
+
+UserInDB(**user_dict)
+```
+
+Equivalent to:
+
+```python
+UserInDB(
+    username="john",
+    password="secret",
+    email="john@example.com"
+)
+```
+
+---
+
+# Pydantic Model from Another Model
+
+You can convert one model into another using `model_dump()`.
+
+```python
+user_dict = user_in.model_dump()
+
+UserInDB(**user_dict)
+```
+
+Equivalent to:
+
+```python
+UserInDB(**user_in.model_dump())
+```
+
+---
+
+# Unpacking with Extra Keywords
+
+```python
+UserInDB(
+    **user_in.model_dump(),
+    hashed_password=hashed_password
+)
+```
+
+This combines existing fields with additional values.
+
+---
+
+# Reduce Duplication
+
+Use inheritance to reduce repeated fields.
+
+```python
+from fastapi import FastAPI
+from pydantic import BaseModel, EmailStr
+
+app = FastAPI()
+
+
+class UserBase(BaseModel):
+    username: str
+    email: EmailStr
+    full_name: str | None = None
+
+
+class UserIn(UserBase):
+    password: str
+
+
+class UserOut(UserBase):
+    pass
+
+
+class UserInDB(UserBase):
+    hashed_password: str
+
+
+def fake_password_hasher(raw_password: str):
+    return "supersecret" + raw_password
+
+
+def fake_save_user(user_in: UserIn):
+    hashed_password = fake_password_hasher(user_in.password)
+
+    user_in_db = UserInDB(
+        **user_in.model_dump(),
+        hashed_password=hashed_password
+    )
+
+    return user_in_db
+
+
+@app.post("/user/", response_model=UserOut)
+async def create_user(user_in: UserIn):
+    user_saved = fake_save_user(user_in)
+    return user_saved
+```
+
+---
+
+# Union or anyOf
+
+FastAPI supports multiple response model types using unions.
+
+```python
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+app = FastAPI()
+
+
+class BaseItem(BaseModel):
+    description: str
+    type: str
+
+
+class CarItem(BaseItem):
+    type: str = "car"
+
+
+class PlaneItem(BaseItem):
+    type: str = "plane"
+    size: int
+
+
+items = {
+    "item1": {
+        "description": "All my friends drive a low rider",
+        "type": "car"
+    },
+    "item2": {
+        "description": "Music is my aeroplane",
+        "type": "plane",
+        "size": 5,
+    },
+}
+
+
+@app.get(
+    "/items/{item_id}",
+    response_model=PlaneItem | CarItem
+)
+async def read_item(item_id: str):
+    return items[item_id]
+```
+
+---
+
+# List of Models
+
+```python
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+app = FastAPI()
+
+
+class Item(BaseModel):
+    name: str
+    description: str
+
+
+items = [
+    {"name": "Foo", "description": "There comes my hero"},
+    {"name": "Red", "description": "It's my aeroplane"},
+]
+
+
+@app.get("/items/", response_model=list[Item])
+async def read_items():
+    return items
+```
+
+---
+
+# Response with Arbitrary Dictionary
+
+```python
+from fastapi import FastAPI
+
+app = FastAPI()
+
+
+@app.get(
+    "/keyword-weights/",
+    response_model=dict[str, float]
+)
+async def read_keyword_weights():
+    return {
+        "foo": 2.3,
+        "bar": 3.4
+    }
+```
+
+---
+
+# Response Status Code
+
+You can customize HTTP status codes using `status_code`.
+
+```python
+from fastapi import FastAPI
+
+app = FastAPI()
+
+
+@app.post("/items/", status_code=201)
+async def create_item(name: str):
+    return {"name": name}
+```
+
+## Common Status Codes
+
+| Status Code | Meaning |
+|---|---|
+| `200` | Success |
+| `201` | Resource Created |
+| `204` | No Content |
+| `400` | Bad Request |
+| `401` | Unauthorized |
+| `404` | Not Found |
+| `500` | Internal Server Error |
+
+
+## Form Data
+:::info
+
+To use forms, first install python-multipart.
+
+Make sure you create a virtual environment, activate it, and then install it, for example:
+
+
+$ pip install python-multipart
+:::
+
+
+
+Import Form and Define form Parameter
+```py 
+from typing import Annotated
+
+from fastapi import FastAPI, Form
+
+app = FastAPI()
+
+
+@app.post("/login/")
+async def login(username: Annotated[str, Form()], password: Annotated[str, Form()]):
+    return {"username": username}
+```
+
+### Pydantic Models for Forms

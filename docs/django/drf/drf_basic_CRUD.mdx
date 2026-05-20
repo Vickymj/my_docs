@@ -1,0 +1,87 @@
+---
+id: drf_basic_CRUD
+title: DRF- Basic CRUD
+---
+
+
+### Installation & Setup
+#### Install DRF
+```bash
+pip install djangorestframework
+```
+
+
+#### Modify Settings
+Open the settings.py file in your project directory
+```py
+INSTALLED_APPS = [
+	...
+	'rest_framework',
+]
+```
+
+
+
+With Restapi CRUD
+
+```py
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+
+
+
+DATA = {
+    1: {"name": "Alice", "age": 25},
+    2: {"name": "Bob", "age": 30}
+}
+
+NEXT_ID = 3
+
+@api_view(['GET', 'POST'])
+def users(request):
+    global NEXT_ID
+
+    if request.method == 'GET':
+        return Response(DATA)
+
+    elif request.method == 'POST':
+        DATA[NEXT_ID] = {
+            "name": request.data.get("name"),
+            "age": request.data.get("age")
+        }
+
+        response = {"id": NEXT_ID, "message": "User created"}
+        NEXT_ID += 1
+
+        return Response(response, status=status.HTTP_201_CREATED)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def user_detail(request, user_id):
+    if user_id not in DATA:
+        return Response({"error": "User not found"}, status=404)
+
+    if request.method == 'GET':
+        return Response(DATA[user_id])
+
+    elif request.method == 'PUT':
+        DATA[user_id]["name"] = request.data.get("name", DATA[user_id]["name"])
+        DATA[user_id]["age"] = request.data.get("age", DATA[user_id]["age"])
+
+        return Response({"message": "User updated"})
+
+    elif request.method == 'DELETE':
+        del DATA[user_id]
+        return Response({"message": "User deleted"})
+```
+urls:
+
+```py
+urlpatterns = [
+    path('users/', views.users),
+    path('users/<int:user_id>/', views.user_detail),
+]
+
+```
+
+

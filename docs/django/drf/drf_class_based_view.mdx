@@ -1,0 +1,79 @@
+---
+id : drf_class_based_view
+title : DRF - Class Based View
+---
+👉 APIView (from rest_framework.views)
+
+```py
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+
+class HelloView(APIView):
+
+    def get(self, request):
+        return Response({"message": "Hello, world!"})
+
+    def post(self, request):
+        return Response({"data": request.data}, status=status.HTTP_201_CREATED)
+```
+🔹 3. Generic Class-Based Views
+
+DRF gives prebuilt CBVs for common patterns:
+
+👉 Located in rest_framework.generics
+
+| Class                          | Purpose            |
+| ------------------------------ | ------------------ |
+| `ListAPIView`                  | GET all objects    |
+| `CreateAPIView`                | POST new object    |
+| `RetrieveAPIView`              | GET single object  |
+| `UpdateAPIView`                | PUT/PATCH          |
+| `DestroyAPIView`               | DELETE             |
+| `ListCreateAPIView`            | GET + POST         |
+| `RetrieveUpdateDestroyAPIView` | GET + PUT + DELETE |
+
+```py
+from rest_framework.generics import ListCreateAPIView
+from .models import Book
+from .serializers import BookSerializer
+
+class BookListCreateView(ListCreateAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+```
+
+🔹 4. Mixins (Building Blocks)
+
+DRF internally uses mixins to build generic views.
+
+Examples:
+
+ListModelMixin
+CreateModelMixin
+RetrieveModelMixin
+
+```py
+from rest_framework import mixins, generics
+from .models import Book
+from .serializers import BookSerializer
+
+class BookView(mixins.ListModelMixin,
+               mixins.CreateModelMixin,
+               generics.GenericAPIView):
+
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+
+    def get(self, request):
+        return self.list(request)
+
+    def post(self, request):
+        return self.create(request)
+```
+🔹 5. When to Use What?
+| Use Case                | Best Choice             |
+| ----------------------- | ----------------------- |
+| Full control            | `APIView`               |
+| Standard CRUD           | Generic views           |
+| Custom behavior + reuse | Mixins + GenericAPIView |

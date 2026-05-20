@@ -3,4 +3,81 @@ id: python_control_flow
 title: Python - Control Flow
 ---
 
-hello
+## Decision Making Statements
+### The if Statements
+`if..elif..else` control statements
+```py
+marks = 80 
+result = ""
+if marks < 30:
+   result = "Failed"
+elif marks > 75:
+   result = "Passed with distinction"
+else:
+   result = "Passed"
+
+print(result)
+```
+
+### The match Statement
+```py
+def checkVowel(n):
+   match n:
+      case 'a': return "Vowel alphabet"
+      case 'e': return "Vowel alphabet"
+      case 'i': return "Vowel alphabet"
+      case 'o': return "Vowel alphabet"
+      case 'u': return "Vowel alphabet"
+      case _: return "Simple alphabet"
+print (checkVowel('a'))
+print (checkVowel('m'))
+print (checkVowel('o'))
+```
+## Loops or Iteration Statements
+### The for Loop
+The `for loop` iterates over the items of any sequence, such as a list, tuple or a string
+```py
+words = ["one", "two", "three"]
+for x in words:
+  print(x)
+```
+
+### The while Loop
+The while loop repeatedly executes a target statement as long as a given boolean expression is true.
+```py
+i = 1
+while i < 6:
+  print(i)
+  i += 1
+```
+
+
+## Jump Statements
+The jump statements are used to jump on a specific statement by breaking the current flow of the program. In Python, there are two jump statements `break` and `continue`.
+
+### The break Statement
+It terminates the current loop and resumes execution at the next statement.
+```py
+x = 0
+
+while x < 10:
+    print("x:", x)
+    if x == 5:
+        print("Breaking...")
+        break
+    x += 1
+
+print("End")
+```
+
+### The continue Statement
+It skips the execution of the program block and returns the control to the beginning of the current loop to start the next iteration.
+
+```py
+
+for letter in "Python":
+    # continue when letter is 'h'
+    if letter == "h":
+        continue
+    print("Current Letter :", letter)
+```

@@ -1,0 +1,177 @@
+---
+id: flask_basic_CRUD
+title: Flask - Basic CRUD
+---
+
+
+### 1. Installation
+
+```bash
+pip install flask
+```
+
+
+
+### 2. Create Flask App
+
+Create a file `app.py`:
+
+```py
+from flask import Flask, request
+
+app = Flask(__name__)
+```
+
+Run the app:
+
+```bash
+flask run
+```
+
+
+
+### 3. Sample Data
+
+```py
+stores = [
+    {
+        "name": "My Store",
+        "items": [
+            {
+                "name": "Chair",
+                "price": 15.99
+            }
+        ]
+    }
+]
+```
+
+
+
+### 4. GET - Fetch All Stores
+
+```py
+@app.get("/store") # http://127.0.0.1:5000/store
+def get_stores():
+    return {"stores": stores}
+```
+
+
+
+### 5. GET - Fetch Store by Name (Path Parameter)
+
+```py
+@app.get("/store/<string:name>")
+def get_store(name):
+    for store in stores:
+        if store["name"] == name:
+            return store
+    return {"message": "Store not found"}, 404
+```
+
+
+
+### 6. GET - Query Parameter Example
+> **Note:** Use `request.args.get("name")` to read query parameters from the URL (e.g., `/query_example?name=My Store`).
+```py
+@app.get("/query_example")
+def query_example():
+    name = request.args.get("name")
+
+    for store in stores:
+        if store["name"] == name:
+            return store
+
+    return {"message": "Store not found"}, 404
+```
+
+
+
+### 7. POST - Create Store
+> **Note:** Use `request.get_json()` to read JSON data sent in the request body.
+```py
+@app.post("/store")
+def create_store():
+    request_data = request.get_json()
+
+    new_store = {
+        "name": request_data["name"],
+        "items": []
+    }
+
+    stores.append(new_store)
+    return new_store, 201
+```
+
+
+
+### 8. PUT - Update Entire Store
+
+```py
+@app.put("/store/<string:name>")
+def update_store(name):
+    request_data = request.get_json()
+
+    for store in stores:
+        if store["name"] == name:
+            store["name"] = request_data.get("name", store["name"])
+            store["items"] = request_data.get("items", store["items"])
+            return store
+
+    return {"message": "Store not found"}, 404
+```
+
+
+
+### 9. PATCH - Partial Update Store
+
+```py
+@app.patch("/store/<string:name>")
+def patch_store(name):
+    request_data = request.get_json()
+
+    for store in stores:
+        if store["name"] == name:
+            if "name" in request_data:
+                store["name"] = request_data["name"]
+            if "items" in request_data:
+                store["items"] = request_data["items"]
+            return store
+
+    return {"message": "Store not found"}, 404
+```
+
+
+
+### 10. DELETE - Remove Store
+
+```py
+@app.delete("/store/<string:name>")
+def delete_store(name):
+    global stores
+
+    stores = [store for store in stores if store["name"] != name]
+
+    return {"message": "Store deleted successfully"}
+```
+
+
+
+### 11. Notes
+
+- Use **GET** for retrieving data
+- Use **POST** for creating data
+- Use **PUT** for full updates
+- Use **PATCH** for partial updates
+- Use **DELETE** for removing data
+
+
+
+### 12. Run the Application
+
+```bash
+export FLASK_APP=app.py   # Linux/Mac
+set FLASK_APP=app.py      # Windows
+
+flask run
+```

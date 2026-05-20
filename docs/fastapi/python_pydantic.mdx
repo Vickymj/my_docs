@@ -1,0 +1,30 @@
+---
+id : python_pydantic
+title: Python - Pydantic
+---
+
+```py
+from enum import Enum
+from random import randint
+
+from pydantic import BaseModel, Field
+
+def random_destination():
+    return randint(11000,11999)
+
+
+class ShippmentStatus(str, Enum):
+    placed = "placed"
+    in_transit = "in_transit"
+    out_for_delivery="out_for_delivery"
+    delivered = "delivered"
+
+
+class Shippment(BaseModel):
+    content:str = Field(max_length=100)
+    weight:float = Field(description="Weight of the shippment in kilogram(KG)",lt=25, ge=1)
+    designation:int |None = Field(default=None)
+    designation2:int |None = Field(default=randint(1,10))
+    designation3:int |None = Field(default_factory=random_destination)
+    status : ShippmentStatus
+```

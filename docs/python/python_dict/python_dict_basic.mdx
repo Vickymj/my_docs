@@ -2,36 +2,96 @@
 id : python_dict_basic
 title: Python - Dict Basic
 ---
-```py
-myDict = {'name': 'Edy', 'age': 26}
-myDict['address'] = 'London'
-print(myDict)
-
-#  Traverse through a dictionary
-
-def traverseDict(dict):
-    for key in dict:
-        print(key, dict[key])
-
-traverseDict(myDict)
-
-#  Searching a dictionary
+#### Ref Python_Day_3.2 dictionary.ipynb
 
 
-def searchDict(dict, value):
-    for key in dict:
-        if dict[key] == value:
-            return key, value
-    return 'The value does not exist'
-print(searchDict(myDict, 27))
-
-#  Delete or remove a dictionary
-
-myDict.pop('name')
-
-
-# sorted method
-myDict = {'eooooa': 1, 'aas': 2, 'udd': 3, 'sseo': 4, 'werwi': 5}
-
-print(sorted(myDict, key=len))
+```mermaid
+graph LR
+Head --> A[10]
+A --> B[20]
+B --> C[30]
+C --> NULL
 ```
+
+
+```mermaid
+
+flowchart LR
+
+head --> A
+tail --> C
+
+prev --> None
+temp --> A
+next --> B
+
+A(A) --> B(B) --> C(C) --> None((None))
+```
+
+```mermaid
+graph TD
+  head(("head"))
+  node5["5"]
+  prevNode["10"]
+  node15["15"]
+  newNode["20"]
+
+  head --> node5
+  node5 --> prevNode
+
+  %% Normal pointer
+  prevNode --> node15
+
+  %% Simulate broken pointer with dotted arrow and label
+  prevNode -.-> node15
+  click prevNode href "javascript:void(0)" "This arrow is broken"
+
+  %% newNode connections
+  newNode --> prevNode
+  newNode --> node15
+```
+
+| Shape                | Syntax  | Example |
+| -------------------- | ------- | ------- |
+| Rectangle            | `[A]`   | A[A]    |
+| Round / Circle edges | `(A)`   | A(A)    |
+| Circle               | `((A))` | A((A))  |
+| Stadium / rounded    | `([A])` | A([A])  |
+
+
+```mermaid
+
+flowchart LR
+
+A <--> B <--> C <--> D
+
+```
+
+```mermaid
+flowchart LR
+
+A --> B --> C --> None
+C --> B
+B --> A
+```
+
+
+```mermaid
+flowchart LR
+
+prev --> B
+temp --> C
+
+A --> B --> C --> D --> None
+```
+
+
+```mermaid
+
+flowchart LR
+
+prev --> B
+temp --> C
+newNode --> D
+
+A --> B --> C --> None

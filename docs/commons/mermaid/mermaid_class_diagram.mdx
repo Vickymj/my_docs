@@ -1,0 +1,143 @@
+---
+id : mermaid_class_diagram
+title  : Mermaid Class Diagram
+---
+### Defining the Class
+- Mehtod 1
+```mermaid
+classDiagram
+
+class BankAccount12
+    BankAccount12 : +String owner
+    BankAccount12 : +Bigdecimal balance
+    BankAccount12 : +deposit(amount)
+    BankAccount12 : +withdrawal(amount)
+```
+### Method 2 : Using `{} brackets`
+```mermaid
+classDiagram
+class BankAccount{
+    +String owner
+    +BigDecimal balance
+    +deposit(amount)
+    +withdrawal(amount)
+}
+```
+with type hinting
+
+```mermaid
+classDiagram
+class BankAccountRetObj{
+    +String owner
+    +BigDecimal balance
+    +deposit(amount) bool
+    +withdrawal(amount) int
+}
+```
+
+
+
+### Defining Relationship
+```
+[classA][Arrow][ClassB]
+```
+```
+| Symbol | Type          | Description        |
+|--------|--------------|--------------------|
+| `<|--` | Inheritance  | Generalization     |
+| `*--`  | Composition  | Strong ownership   |
+| `o--`  | Aggregation  | Weak ownership     |
+| `-->`  | Association  | Relationship       |
+| `--`   | Link (Solid) | Solid line link    |
+| `..>`  | Dependency   | Uses relationship  |
+| `..|>` | Realization  | Implements         |
+| `..`   | Link (Dashed)| Dashed line link   |
+```
+```mermaid
+classDiagram
+classA <|-- classB
+classC *-- classD
+classE o-- classF
+classG <-- classH
+classI -- classJ
+classK <.. classL
+classM <|.. classN
+classO .. classP
+
+
+
+```
+### Labels on Relations
+```
+[classA][Arrow][ClassB]:LabelText
+```
+```mermaid
+classDiagram
+classA <|-- classB : implements
+classC *-- classD : composition
+classE o-- classF : aggregation
+
+```
+
+
+
+### Annotations on classes
+
+- `<<Interface>>` To represent an Interface class
+- `<<Abstract>>` To represent an abstract class
+- `<<Service>>` To represent a service class
+- `<<Enumeration>>` To represent an enum
+
+
+```
+
+classDiagram
+  class Shape <<interface>>
+
+```
+```mermaid
+classDiagram
+class Shape 
+<<interface>> Shape
+Shape : noOfVertices
+Shape : draw()
+
+```
+
+```mermaid
+classDiagram
+class Shape{
+    <<interface>>
+    noOfVertices
+    draw()
+}
+class Color{
+    <<enumeration>>
+    RED
+    BLUE
+    GREEN
+    WHITE
+    BLACK
+}
+
+```
+### Setting the direction of the diagram
+```mermaid
+
+classDiagram
+  direction RL
+  class Student {
+    -idCard : IdCard
+  }
+  class IdCard{
+    -id : int
+    -name : string
+  }
+  class Bike{
+    -id : int
+    -name : string
+  }
+  Student "1" --o "1" IdCard : carries
+  Student "1" --o "1" Bike : rides
+
+```

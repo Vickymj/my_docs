@@ -1,0 +1,577 @@
+---
+id: fastapi_intro
+title: FastAPI - Intro
+---
+
+# FastAPI Complete Guide
+
+This documentation explains the FastAPI concepts used in the provided code examples.
+
+## Installation
+
+Install FastAPI and Uvicorn:
+
+```bash
+pip install fastapi uvicorn
+```
+
+Run the application:
+
+```bash
+uvicorn main:app --reload
+```
+
+---
+
+# Create FastAPI Application
+
+```python
+from fastapi import FastAPI
+
+app = FastAPI()
+```
+
+## Basic GET API
+
+```python
+@app.get("/")
+async def main():
+    return list((1,2,3))
+```
+
+### Explanation
+
+- `@app.get("/")` defines a GET endpoint.
+- `/` is the root route.
+- `async def` creates an asynchronous function.
+- Returns a list response.
+
+### Response
+
+```json
+[1,2,3]
+```
+
+---
+
+# Path Parameters
+
+## Path Parameter with Path Type
+
+```python
+@app.get("/files/{file_path:path}")
+async def read_file(file_path: str):
+    return {"file_path": file_path}
+```
+
+## Explanation
+
+- `{file_path:path}` captures the full path including `/`.
+- Useful for file systems and nested paths.
+
+### Example
+
+```bash
+/files/docs/python/test.txt
+```
+
+### Response
+
+```json
+{
+  "file_path": "docs/python/test.txt"
+}
+```
+
+---
+
+## Normal Path Parameter
+
+```python
+@app.get("/files/{file_path}")
+async def read_file2(file_path: str):
+    return {"file_path": file_path}
+```
+
+### Example
+
+```bash
+/files/test
+```
+
+---
+
+# Enum Path Parameters
+
+```python
+from enum import Enum
+
+class ModelName(str, Enum):
+    alexnet = "alexnet"
+    resnet = "resnet"
+    lenet = "lenet"
+```
+
+## API Example
+
+```python
+@app.get("/models/{model_name}")
+async def get_model(model_name: ModelName):
+    if model_name is ModelName.alexnet:
+        return {"model_name": model_name, "message": "Deep Learning FTW!"}
+
+    if model_name.value == "lenet":
+        return {"model_name": model_name, "message": "LeCNN all the images"}
+
+    return {"model_name": model_name, "message": "Have some residuals"}
+```
+
+## Explanation
+
+- Enum restricts accepted values.
+- Only `alexnet`, `resnet`, and `lenet` are allowed.
+
+### Example Request
+
+```bash
+/models/alexnet
+```
+
+### Response
+
+```json
+{
+  "model_name": "alexnet",
+  "message": "Deep Learning FTW!"
+}
+```
+
+---
+
+# Path Parameter Type Conversion
+
+```python
+@app.get("/items/{item_id}")
+async def read_item(item_id: int):
+    return {"item_id": item_id}
+```
+
+## Explanation
+
+- `item_id` is automatically converted to integer.
+- Invalid integer values return validation errors.
+
+---
+
+# Query Parameters
+
+```python
+fake_items_db = [
+    {"item_name": "Foo"},
+    {"item_name": "Bar"},
+    {"item_name": "Baz"}
+]
+
+@app.get("/items/")
+async def read_item(skip: int = 0, limit: int = 10):
+    return fake_items_db[skip : skip + limit]
+```
+
+## Explanation
+
+- `skip` and `limit` are query parameters.
+- Default values:
+  - `skip = 0`
+  - `limit = 10`
+
+### Example
+
+```bash
+/items/?skip=0&limit=2
+```
+
+---
+
+# Optional Query Parameters
+
+```python
+@app.get("/items/{item_id}")
+async def read_item_op(item_id: str, q: str | None = None):
+    if q:
+        return {"item_id": item_id, "q": q}
+    return {"item_id": item_id}
+```
+
+## Explanation
+
+- `q` is optional.
+- `None` means the parameter is not required.
+
+---
+
+# Multiple Parameters
+
+```python
+@app.get("/items/{item_id}")
+async def read_user_item(
+    item_id: str,
+    needy: str,
+    skip: int = 0,
+    limit: int | None = None
+):
+    item = {
+        "item_id": item_id,
+        "needy": needy,
+        "skip": skip,
+        "limit": limit
+    }
+    return item
+```
+
+## Explanation
+
+| Parameter | Type | Required |
+|---|---|---|
+| item_id | Path | Yes |
+| needy | Query | Yes |
+| skip | Query | No |
+| limit | Query | No |
+
+---
+
+# Request Body with Pydantic
+
+```python
+from pydantic import BaseModel
+
+class Item(BaseModel):
+    name: str
+    description: str | None = None
+    price: float
+    tax: float | None = None
+```
+
+## POST Request Body
+
+```python
+@app.post("/items/")
+async def create_item(item: Item):
+    return item
+```
+
+## Example Request Body
+
+```json
+{
+  "name": "Laptop",
+  "description": "Gaming Laptop",
+  "price": 50000,
+  "tax": 2000
+}
+```
+
+---
+
+# PUT Request with Path and Body
+
+```python
+@app.put("/items/{item_id}")
+async def update_item(item_id: int, item: Item):
+    return {"item_id": item_id, **item.model_dump()}
+```
+
+## Explanation
+
+- Combines:
+  - Path parameter
+  - Request body
+
+---
+
+# Path + Query + Body Parameters
+
+```python
+@app.put("/items/{item_id}")
+async def update_item_q(
+    item_id: int,
+    item: Item,
+    q: str | None = None
+):
+    result = {"item_id": item_id, **item.model_dump()}
+    if q:
+        result.update({"q": q})
+    return result
+```
+
+---
+
+# Query Validation
+
+```python
+from typing import Annotated
+from fastapi import Query
+
+@app.get("/items1/")
+async def read_items(
+    q: Annotated[str | None, Query(max_length=50)] = None
+):
+    return {"q": q}
+```
+
+## Explanation
+
+- `max_length=50` validates query length.
+
+---
+
+# Multiple Query Values
+
+```python
+@app.get("/items2/")
+async def read_items(
+    q: Annotated[list[str] | None, Query()] = None
+):
+    return {"q": q}
+```
+
+## Example
+
+```bash
+/items2/?q=foo&q=bar&q=baz
+```
+
+### Response
+
+```json
+{
+  "q": ["foo", "bar", "baz"]
+}
+```
+
+---
+
+# Query Metadata
+
+```python
+@app.get("/items4/")
+async def read_items4(
+    q: Annotated[
+        str | None,
+        Query(
+            title="Query string",
+            description="Search query",
+            min_length=3,
+        ),
+    ] = None,
+):
+    return {"q": q}
+```
+
+## Features
+
+- Title
+- Description
+- Validation
+- Swagger documentation support
+
+---
+
+# Alias Parameters
+
+```python
+@app.get("/items6/")
+async def read_items6(
+    q: Annotated[str | None, Query(alias="item-query")] = None
+):
+    return {"q": q}
+```
+
+## Example
+
+```bash
+/items6/?item-query=test
+```
+
+---
+
+# Deprecated Parameters
+
+```python
+Query(
+    deprecated=True
+)
+```
+
+## Purpose
+
+Marks parameters as deprecated in Swagger UI.
+
+---
+
+# Custom Validation with AfterValidator
+
+```python
+from pydantic import AfterValidator
+```
+
+## Validator Function
+
+```python
+def check_valid_id(id: str):
+    if not id.startswith(("isbn-", "imdb-")):
+        raise ValueError(
+            'Invalid ID format'
+        )
+    return id
+```
+
+## API
+
+```python
+@app.get("/items/")
+async def read_items(
+    id: Annotated[str | None, AfterValidator(check_valid_id)] = None,
+):
+    return {"id": id}
+```
+
+---
+
+# Path Parameter Validation
+
+```python
+from fastapi import Path
+
+@app.get("/items/{item_id}")
+async def read_items(
+    item_id: Annotated[
+        int,
+        Path(title="The ID of the item to get")
+    ]
+):
+    return {"item_id": item_id}
+```
+
+---
+
+# Numeric Validation
+
+```python
+@app.get("/items8/{item_id}")
+async def read_items(
+    *,
+    item_id: Annotated[
+        int,
+        Path(ge=0, le=1000)
+    ],
+    q: str,
+    size: Annotated[
+        float,
+        Query(gt=0, lt=10.5)
+    ],
+):
+    return {"item_id": item_id}
+```
+
+## Validation Rules
+
+| Validation | Meaning |
+|---|---|
+| ge | Greater than or equal |
+| le | Less than or equal |
+| gt | Greater than |
+| lt | Less than |
+
+---
+
+# Query Parameter Models
+
+```python
+from pydantic import BaseModel, Field
+from typing import Literal
+
+class FilterParams(BaseModel):
+    limit: int = Field(100, gt=0, le=100)
+    offset: int = Field(0, ge=0)
+    order_by: Literal[
+        "created_at",
+        "updated_at"
+    ] = "created_at"
+    tags: list[str] = []
+```
+
+## API
+
+```python
+@app.get("/items9/")
+async def read_items(
+    filter_query: Annotated[
+        FilterParams,
+        Query()
+    ]
+):
+    return filter_query
+```
+
+---
+
+
+## Features
+
+- Validation
+- Descriptions
+- Metadata
+- Swagger support
+
+---
+
+# Swagger Documentation
+
+FastAPI automatically generates:
+
+- Swagger UI
+- OpenAPI schema
+- Interactive API docs
+
+## URLs
+
+| Documentation | URL |
+|---|---|
+| Swagger UI | `/docs` |
+| ReDoc | `/redoc` |
+
+---
+
+# Run the Application
+
+```bash
+uvicorn main:app --reload
+```
+
+---
+
+# Best Practices
+
+- Use Pydantic models for validation.
+- Use type hints everywhere.
+- Use `Annotated` for advanced validation.
+- Use async APIs when possible.
+- Add descriptions and metadata for better documentation.
+
+---
+
+# Summary
+
+This guide covered:
+
+- FastAPI basics
+- Path parameters
+- Query parameters
+- Request body
+- Validation
+- Pydantic models
+- Multiple body parameters
+- Field validations
+- Swagger documentation
+
+FastAPI provides automatic validation, documentation, and high performance for building modern Python APIs.

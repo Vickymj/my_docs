@@ -1,0 +1,118 @@
+---
+id: python_regular_expression
+title: Python - Regex
+---
+
+### Import the Regex Module
+```py
+import re
+```
+
+### Basic Regex Functions
+
+| Function       | Purpose              |
+| -------------- | -------------------- |
+| `re.search()`  | Find first match     |
+| `re.match()`   | Match from beginning |
+| `re.findall()` | Return all matches   |
+| `re.sub()`     | Replace matches      |
+| `re.split()`   | Split using regex    |
+
+
+### Simple Pattern Example
+Find the word "cat" in a string.
+```py
+import re
+
+text = "The cat is sleeping"
+
+match = re.search("cat", text)
+
+if match:
+    print("Found!")
+```
+
+### Important Regex Symbols
+
+| Symbol | Meaning         | Example          |
+| ------ | --------------- | ---------------- |
+| `.`    | Any character   | `c.t` → cat, cot |
+| `^`    | Start of string | `^Hello`         |
+| `$`    | End of string   | `end$`           |
+| `*`    | 0 or more       | `lo*l`           |
+| `+`    | 1 or more       | `lo+l`           |
+| `?`    | optional        | `colou?r`        |
+| `[]`   | character set   | `[abc]`          |
+| `\d`   | digit           | `\d\d`           |
+| `\w`   | word char       | letters/numbers  |
+| `\s`   | whitespace      | space/tab        |
+
+### Example: Find All Numbers
+
+```py
+
+import re
+
+text = "My numbers are 45 and 67"
+
+numbers = re.findall(r"\d+", text)
+
+print(numbers)
+
+## Output
+['45', '67']
+```
+
+### Raw Strings (r"")
+You often see regex written like:
+```bash
+r"\d+"
+```
+
+7. Character Sets
+```py
+text = "cat bat mat"
+
+matches = re.findall(r"[cb]at", text)
+
+print(matches)
+```
+
+8. Replace Text with Regex
+```py
+import re
+
+text = "My phone: 1234567890"
+
+hidden = re.sub(r"\d", "*", text)
+
+print(hidden)
+```
+
+9. Extract Emails Example
+```py
+text = "Contact me at test@gmail.com"
+
+emails = re.findall(r"\S+@\S+", text)
+
+print(emails)
+```
+
+10. Regex Groups
+```py
+text = "Date: 12-03-2026"
+
+match = re.search(r"(\d{2})-(\d{2})-(\d{4})", text)
+
+print(match.group(1))  # day
+print(match.group(2))  # month
+print(match.group(3))  # year
+```
+
+11. Quantifiers
+
+| Pattern | Meaning   |
+| ------- | --------- |
+| `{3}`   | exactly 3 |
+| `{2,5}` | 2 to 5    |
+| `{2,}`  | 2 or more |

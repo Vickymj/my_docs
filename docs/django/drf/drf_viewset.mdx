@@ -1,0 +1,132 @@
+---
+id : drf_viewset
+title : DRF - ViewSet
+---
+🔹 What is a ViewSet?
+A ViewSet is a class that combines multiple related views (like list, create, retrieve, update, delete) into a single class.
+
+👉 Instead of writing separate views like:
+
+BookListView
+BookCreateView
+BookDetailView
+
+You write one ViewSet that does everything.
+
+🔹 Why use ViewSets?
+
+They:
+
+reduce boilerplate code ✂️
+group logic in one place 🧱
+work seamlessly with routers 🔗
+
+🔹 1. Basic ViewSet Example
+```py
+from rest_framework import viewsets
+from .models import Book
+from .serializers import BookSerializer
+
+class BookViewSet(viewsets.ViewSet):
+
+    def list(self, request):
+        queryset = Book.objects.all()
+        serializer = BookSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def create(self, request):
+        serializer = BookSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+
+    def retrieve(self, request, pk=None):
+        book = Book.objects.get(pk=pk)
+        serializer = BookSerializer(book)
+        return Response(serializer.data)
+```
+
+🔍 Methods Mapping
+| Method       | HTTP   | URL          |
+| ------------ | ------ | ------------ |
+| `list()`     | GET    | /books/      |
+| `create()`   | POST   | /books/      |
+| `retrieve()` | GET    | /books/{id}/ |
+| `update()`   | PUT    | /books/{id}/ |
+| `destroy()`  | DELETE | /books/{id}/ |
+
+
+🔹 2. ModelViewSet (Most Used ⭐)
+
+Instead of writing everything manually, DRF gives:
+
+👉 ModelViewSet
+
+```py
+
+from rest_framework.viewsets import ModelViewSet
+from .models import Book
+from .serializers import BookSerializer
+
+class BookViewSet(ModelViewSet):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+```
+
+🔥 That’s it — you now get:
+
+list
+create
+retrieve
+update
+delete
+
+ALL automatically.
+🔹 3. Routers (Magic Part ✨)
+ViewSets don’t define URLs manually.
+
+You use routers:
+```py
+from rest_framework.routers import DefaultRouter
+from .views import BookViewSet
+
+router = DefaultRouter()
+router.register(r'books', BookViewSet)
+
+urlpatterns = router.urls
+```
+
+| URL            | Action           |
+| -------------- | ---------------- |
+| `/books/`      | GET, POST        |
+| `/books/{id}/` | GET, PUT, DELETE |
+
+
+🔹 4. Types of ViewSets
+
+| Type                   | Use Case                |
+| ---------------------- | ----------------------- |
+| `ViewSet`              | Full control            |
+| `GenericViewSet`       | Combine with mixins     |
+| `ModelViewSet`         | Full CRUD (most common) |
+| `ReadOnlyModelViewSet` | Only GET APIs           |
+
+
+🔹 5. Custom Actions 🔧
+You can add extra APIs inside a ViewSet using @action.
+
+```py
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
+class BookViewSet(ModelViewSet):
+
+    @action(detail=True, methods=['get'])
+    def highlight(self, request, pk=None):
+        return Response({"message": "Highlighting book"})
+```
+
+🔍 URL created:
+/books/{id}/highlight/
+

@@ -1,0 +1,163 @@
+---
+id : fastapi_sql_relation_db
+title : FastAPI - SQL (Relational) Databases
+---
+
+## Install Dependency
+```bash
+pip install sqlalchemy  #
+pip install  aiosqlite  #   async version of sqlite
+pip install  alembic # alembic
+```
+
+## Create Models
+```py title='models.py'
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy import Integer, String, ForeignKey
+
+class Base(DeclarativeBase):...
+class User(Base):
+    __tablename__ = "users"
+    id :Mapped[int] = mapped_column(Integer,primary_key=True, index=True)
+    name:Mapped[str] = mapped_column(String(50), nullable=False)
+    age:Mapped[int] = mapped_column(Integer, nullable=True)
+```
+
+## Create Engine and DB setup
+
+
+```py title='db.py'
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.orm import sessionmaker
+
+# engine = create_async_engine("postgresql+asyncpg://user:password@localhost:5432/mydb", echo=True)
+DATABASE_URL = "sqlite+aiosqlite:///./app.db"
+
+engine = create_async_engine(
+    DATABASE_URL,
+    echo=True
+)
+
+AsyncSessionLocal = sessionmaker(
+    bind=engine,
+    class_=AsyncSession,
+    autoflush=False,
+    expire_on_commit=False
+)
+# Create a Session Dependency
+async def get_session():
+    async with AsyncSessionLocal() as session:
+        yield session
+
+
+from fastapi import Depends
+SessionDep = Annotated[AsyncSession, Depends(get_session)]
+
+```
+
+## Create Database Tables
+
+###  Initialize Alembic
+```bash
+alembic init alembic
+```
+
+This creates:
+- alembic/
+- alembic.ini
+
+### Configure `alembic.ini`
+Find this line:
+```py
+sqlalchemy.url = driver://user:pass@localhost/dbname
+```
+
+Replace with:
+```py
+sqlalchemy.url = sqlite:///./app.db
+```
+Alembic uses synchronous SQLAlchemy internally, so use normal SQLite URL here.
+### Update alembic/env.py
+
+Import Base and models
+```py
+from database import Base
+from models import User
+```
+
+Find:
+```py
+target_metadata = None
+```
+Replace with:
+```py
+target_metadata = Base.metadata
+```
+
+### Create First Migration
+```bash
+alembic revision --autogenerate -m "create users table"
+```
+
+### Apply Migration
+
+```py
+alembic upgrade head
+```
+
+### Best practice to import base and models for Migration
+```py
+# models/__init__.py
+
+from .base import Base
+
+from .user import User
+from .post import Post
+from .comment import Comment
+```
+
+Then everywhere:
+```py
+import models
+from models import Base
+```
+
+
+### Execute RAW sqlalchemy
+
+```py title='test.py'
+from db import AsyncSessionLocal
+async with AsyncSessionLocal() as session:
+
+    result = await session.execute(
+        select(User).where(User.id == 1)
+    )
+
+    user = result.scalar_one_or_none()
+
+    if user:
+        await session.delete(user)
+        await session.commit()
+```
+
+
+### Use if on FastAPI
+```py title='main.py'
+from fastapi import FastAPI, Depends
+from db import get_session,SessionDep
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
+from models import User
+app = FastAPI(title="User")
+sessiondb = 
+@app.get("/")
+# async def main_page(db:AsyncSession = Depends(get_session)):
+async def main_page(db:SessionDep):
+
+    result = await db.execute(select(User).where(User.age == 30))
+    users = result.scalars().all()
+
+    return users
+```
+
+

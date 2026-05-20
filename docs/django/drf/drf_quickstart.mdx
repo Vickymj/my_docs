@@ -1,0 +1,52 @@
+---
+id : drf_quickstart
+title : DRF - QucickStart
+---
+
+## Installation & Setup
+### Install DRF
+```bash
+pip install djangorestframework
+```
+
+
+### Modify Settings
+Open the settings.py file in your project directory
+```py
+INSTALLED_APPS = [
+	...
+	'rest_framework',
+]
+```
+
+## DRF Version (Without Serializers)
+```py 
+
+import json
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Movie
+```
+### GET all + POST (Create)
+```py
+class MovieListCreateAPIView(APIView):
+
+    def get(self, request):
+        movies = list(Movie.objects.values())
+        return Response(movies)
+
+    def post(self, request):
+        data = request.data
+
+        movie = Movie.objects.create(
+            name=data.get("name"),
+            description=data.get("description"),
+            active=data.get("active", True)
+        )
+
+        return Response({
+            "message": "Movie created",
+            "id": movie.id
+        }, status=status.HTTP_201_CREATED)
+```

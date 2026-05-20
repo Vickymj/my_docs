@@ -1,0 +1,463 @@
+
+---
+id : uml_full_detailed_interview
+title: UML Full Detailed Interview
+---
+
+
+
+1. What is UML?
+
+UML (Unified Modeling Language) is a standardized visual language used to model software systems. It helps developers design, understand, and communicate system architecture before implementation.
+
+### Diagram:
+```text
++-+
+|       System         |
++-+
+| - components         |
+| - interactions       |
++-+
+```
+
+
+
+## 2. What is a Class Diagram?
+
+A class diagram represents classes, attributes, methods, and relationships.
+
+### Diagram:
+```text
++-+
+|       Person         |
++-+
+| - name: string       |
+| - age: int           |
++-+
+| + speak()            |
++-+
+```
+
+
+
+## 3. What is Association?
+
+Association is a relationship where one class uses or knows another.
+
+### Diagram:
+```text
++--+ --> +--+
+| Teacher   |           | Student   |
++--+           +--+
+```
+
+### Explanation:
+Association represents a general relationship between two classes. It can be one-way or two-way. It does not imply ownership.
+
+
+
+## 4. What is Directed Association?
+
+A one-way relationship where only one class knows the other.
+
+### Diagram:
+```text
++--+ --> +--+
+| Teacher   |        | Student   |
++--+        +--+
+```
+
+
+
+## 5. What is Aggregation?
+
+Aggregation is a weak "has-a" relationship.
+
+### Diagram:
+```text
++--+
+| Department      |
++--+
+| - employees     | ◇> Employee
++--+
+```
+
+### Explanation:
+- Objects are independent
+- Deleting one does not affect the other
+
+
+
+## 6. What is Composition?
+
+Strong "has-a" relationship.
+
+### Diagram:
+```text
++--+
+| House           |
++--+
+| - rooms         | ◆> Room
++--+
+```
+
+### Explanation:
+- Strong ownership
+- Child cannot exist without parent
+
+
+
+## 7. Aggregation vs Composition
+
+### Diagram:
+Aggregation:
+```text
+◇> Employee
+```
+
+Composition:
+```text
+◆> Room
+```
+
+### Explanation:
+Aggregation is weak ownership, while composition is strong ownership.
+
+
+
+## 8. What is Inheritance?
+
+Inheritance allows one class to acquire properties of another.
+
+### Diagram:
+```text
+        +--+
+        | Animal |
+        +--+
+            ▲
+            |
+        +--+
+        | Dog    |
+        +--+
+```
+
+
+
+## 9. What is Realization?
+
+A class implements an interface.
+
+### Diagram:
+```text
+<<interface>>
++-+
+| Animal   |
++-+
+     ▲
+     |
++-+
+| Dog      |
++-+
+```
+
+
+
+## 10. What is Dependency?
+
+A temporary relationship where one class uses another.
+
+### Diagram:
+```text
++-+  ..>  +-+
+| A     |       | B     |
++-+       +-+
+```
+
+
+
+## 11. Multiplicity
+
+Defines how many objects participate.
+
+### Diagram:
+```text
+1 Teacher -- * Students
+```
+
+
+
+## 12. 1:1 Relationship
+
+### Diagram:
+```text
++--+ - +--+
+| A      |      | B      |
++--+      +--+
+```
+
+
+
+## 13. 1:N Relationship
+
+### Diagram:
+```text
++--+ -> * --+
+| A      |                |
++--+               B
+```
+
+
+
+## 14. N:M Relationship
+
+### Diagram:
+```text
+* <> *
+```
+
+
+
+## 15. Interface in UML
+
+### Diagram:
+```text
+<<interface>>
+++
+| IAnimal |
+++
+```
+
+
+
+## 16. Abstract Class
+
+### Diagram:
+```text
+++
+| <<abstract>>|
+| Animal     |
+++
+```
+
+
+
+## 17. Difference: Association vs Dependency
+
+Association is a permanent relationship, while dependency is temporary.
+
+
+
+## 18. Difference: Inheritance vs Composition
+
+Inheritance is IS-A, composition is HAS-A.
+
+
+
+## 19. What is Abstraction?
+
+Hiding implementation details and showing only essential features.
+
+
+
+## 20. What is Encapsulation?
+
+Binding data and methods together.
+
+
+
+## 21. What is Polymorphism?
+
+One interface, many implementations.
+
+
+
+## 22. What is Coupling?
+
+Degree of dependency between classes.
+
+
+
+## 23. What is Cohesion?
+
+How well class responsibilities are focused.
+
+
+
+## 24. What is Use Case Diagram?
+
+Represents system interactions with users.
+
+
+
+## 25. What is Sequence Diagram?
+
+Shows interaction between objects over time.
+
+
+
+## 26. What is Activity Diagram?
+
+Represents workflow of system.
+
+
+
+## 27. What is System Boundary?
+
+Defines scope of system.
+
+
+
+## 28. What is Package Diagram?
+
+Groups related classes.
+
+
+
+## 29. What is Component Diagram?
+
+Represents system components.
+
+
+
+## 30. What is Deployment Diagram?
+
+Shows hardware and software deployment.
+
+
+
+## 31. Real-world Example: Library
+
+### Diagram:
+```text
+Student -> Book
+```
+
+
+
+## 32. Real-world Example: E-commerce
+
+### Diagram:
+```text
+Customer -> Order -> Product
+```
+
+
+
+## 33. Why UML is Important?
+
+- System design
+- Communication
+- Documentation
+- Interview clarity
+
+
+
+## 34. UML in Software Development
+
+Used during:
+- Design phase
+- Architecture planning
+
+
+
+## 35. UML in Agile
+
+Used for quick modeling and communication.
+
+
+
+## 36. UML in Interviews
+
+Helps explain system design clearly.
+
+
+
+## 37. UML Tools
+
+- Draw.io
+- StarUML
+- PlantUML
+
+
+
+## 38. How to represent methods?
+
+Inside class box under attributes.
+
+
+
+## 39. How to represent attributes?
+
+In the top section of class.
+
+
+
+## 40. Visibility Symbols
+
+- + Public
+- - Private
+- # Protected
+
+
+
+## 41. Example Visibility
+
+```text
++ name: string
+- age: int
+```
+
+
+
+## 42. What is Stereotype?
+
+Adds extra meaning like `<<interface>>`.
+
+
+
+## 43. What is a Relationship?
+
+Defines interaction between classes.
+
+
+
+## 44. What is Modeling?
+
+Representing real-world systems in UML.
+
+
+
+## 45. What is System Design?
+
+Designing architecture before coding.
+
+
+
+## 46. What is UML State Diagram?
+
+Represents states of an object.
+
+
+
+## 47. What is Activity Flow?
+
+Sequence of steps in process.
+
+
+
+## 48. What is Class Responsibility?
+
+What a class is responsible for.
+
+
+
+## 49. What is Object Interaction?
+
+How objects communicate.
+
+
+
+## 50. Final Concept
+
+UML helps bridge gap between design and implementation.
+

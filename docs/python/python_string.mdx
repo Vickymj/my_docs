@@ -1,0 +1,47 @@
+---
+id : python_string
+title : Python - String
+---
+In Python, a string is an immutable sequence
+
+| Operator | Description | Example |
+|----------|-------------|---------|
+| `+` | Concatenation - Adds values on either side of the operator | `a + b` will give `HelloPython` |
+| `*` | Repetition - Creates new strings, concatenating multiple copies of the same string | `a * 2` will give `HelloHello` |
+| `[]` | Slice - Gives the character from the given index | `a[1]` will give `e` |
+| `[ : ]` | Range Slice - Gives the characters from the given range | `a[1:4]` will give `ell` |
+| `in` | Membership - Returns `True` if a character exists in the given string | `'H' in a` will give `True` |
+| `not in` | Membership - Returns `True` if a character does not exist in the given string | `'M' not in a` will give `True` |
+
+### Built-in String Methods
+| Sr.No | Method & Description | Example |
+|------|----------------------|---------|
+| 1 | `capitalize()`  <br/> Capitalizes the first letter of the string. | `"python".capitalize()` → `"Python"` |
+| 2 | `endswith(suffix, beg=0, end=len(string))`  <br/> Determines if the string ends with the given suffix. | `"Hello".endswith("lo")` → `True` |
+| 3 | `find(str, beg=0, end=len(string))`  <br/> Returns the index of substring if found, otherwise `-1`. | `"Python".find("th")` → `2` |
+| 4 | `index(str, beg=0, end=len(string))`  <br/> Same as `find()`, but raises an exception if not found. | `"Python".index("th")` → `2` |
+| 5 | `isalnum()`  <br/> Returns `True` if all characters are alphanumeric. | `"Python123".isalnum()` → `True` |
+| 6 | `isalpha()`  <br/> Returns `True` if all characters are alphabetic. | `"Python".isalpha()` → `True` |
+| 7 | `isdecimal()`  <br/> Returns `True` if all characters are decimal characters. | `"123".isdecimal()` → `True` |
+| 8 | `isdigit()`  <br/> Returns `True` if all characters are digits. | `"456".isdigit()` → `True` |
+| 9 | `islower()`  <br/> Returns `True` if all cased characters are lowercase. | `"python".islower()` → `True` |
+| 10 | `isnumeric()`  <br/> Returns `True` if all characters are numeric. | `"12345".isnumeric()` → `True` |
+| 11 | `istitle()`  <br/> Returns `True` if the string is titlecased. | `"Hello World".istitle()` → `True` |
+| 12 | `isupper()`  <br/> Returns `True` if all cased characters are uppercase. | `"PYTHON".isupper()` → `True` |
+| 13 | `join(seq)`  <br/> Joins elements of a sequence into a string. | `"-".join(["Python", "Java"])` → `"Python-Java"` |
+| 14 | `lower()`  <br/> Converts all uppercase letters to lowercase. | `"PYTHON".lower()` → `"python"` |
+| 15 | `lstrip()`  <br/> Removes leading whitespace from the string. | `"   Hello".lstrip()` → `"Hello"` |
+| 16 | `replace(old, new [, max])`  <br/> Replaces occurrences of a substring with another substring. | `"Hello World".replace("World", "Python")` → `"Hello Python"` |
+| 17 | `startswith(str, beg=0, end=len(string))`  <br/> Determines if the string starts with the given substring. | `"Python".startswith("Py")` → `True` |
+| 18 | `zfill(width)`  <br/> Pads the string with zeros on the left side. | `"42".zfill(5)` → `"00042"` |
+| 19 | `upper()`  <br/> Converts lowercase letters to uppercase. | `"python".upper()` → `"PYTHON"` |
+| 20 | `title()`  <br/> Converts the string into title case. | `"hello world".title()` → `"Hello World"` |
+| 21 | `swapcase()`  <br/> Swaps uppercase letters to lowercase and vice versa. | `"PyThOn".swapcase()` → `"pYtHoN"` |
+
+
+### Built-in Functions with Strings
+| Sr.No | Function & Description | Example |
+|------|------------------------|---------|
+| 1 | `len(string)`  <br/> Returns the length of the string. | `len("Python")` → `6` |
+| 2 | `max(string)`  <br/> Returns the maximum alphabetical character from the string. | `max("Python")` → `"y"` |
+| 3 | `min(string)`  <br/> Returns the minimum alphabetical character from the string. | `min("Python")` → `"P"` |

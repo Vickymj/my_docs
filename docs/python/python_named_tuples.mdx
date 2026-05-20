@@ -1,0 +1,150 @@
+---
+id : python_named_tuples
+title : Python - NamedTuple
+---
+
+
+- In Python, a namedtuple() is a subclass of tuple that allows you to create tuples with named fields. 
+- Meaning, you can access the elements of the tuple using fieldnames instead of just numerical indices. 
+- It is part of the collections module in Python.
+
+```py title='syntax'
+from collections import namedtuple
+ 
+# Define a namedtuple
+Point = namedtuple('typename', fieldnames )
+```
+:::info
+- `Type Name: ` The typename is the name of the namedtuple class. It is a string that represents the name of the tuple type.
+- `Field Names:` The field names are the names of the elements in the tuple. They are defined as a list of strings.
+
+:::
+
+## Create a NamedTuple in Python
+```py
+
+from collections import namedtuple
+
+# Define a namedtuple
+Vertex = namedtuple('Vertex', ['x', 'y'])
+
+# Create an instance
+v = Vertex(10, 20)
+
+# Access fields
+print("Vertex-1:", v.x)
+print("Vertex-2:", v.y)
+```
+
+## Access NamedTuple Fields
+- `Accessing by Indexing` − You can access the fields using their index, just like a regular tuple.
+```py
+from collections import namedtuple
+
+# Define a namedtuple
+Point = namedtuple('Point', ['x', 'y'])
+
+# Create an instance
+p = Point(10, 20)
+
+# Access fields by indexing
+print("Point-1", p[0])
+print("Point-2", p[1])
+```
+- `Accessing by keyname` − You can also access the fields using their key names, similar to a dictionary.
+```py
+from collections import namedtuple
+
+# Define a namedtuple
+Point = namedtuple('Point', ['x', 'y'])
+
+# Create an instance
+p = Point(10, 20)
+
+# Access fields by keyname
+print("Point-1:", p.x)
+print("Point-2:", p.y)
+
+```
+- `Accessing Using getattr()` − You can use the getattr() function to access the fields by name.
+```py
+
+from collections import namedtuple
+
+# Define a namedtuple
+Point = namedtuple('Point', ['x', 'y'])
+
+# Create an instance
+p = Point(10, 20)
+ 
+# Access fields using getattr()
+print("getattr(p, 'x'):", getattr(p, 'x'))
+print("getattr(p, 'y'):", getattr(p, 'y'))
+```
+
+## NamedTuple Methods
+### The `_fields()` method
+The_fields() method is used to access the field names of the namedtuple. It doesn't need any arguments and returns a tuple of the field names
+```py
+from collections import namedtuple
+
+# Define a namedtuple
+Point = namedtuple('Point', ['x', 'y'])
+
+# Create an instance
+p = Point(10, 20)
+
+# Access fields using _fields()
+print("Fields of p:", p._fields)
+
+
+## Output
+
+Fields of p: ('x', 'y')
+```
+
+### The `_replace()` method
+The _replace() method is used to create a new instance of the namedtuple with one or more fields replaced with new values. It takes keyword arguments where the keys are the field names and the values are the new values to be assigned.
+```py
+from collections import namedtuple
+
+# Define a namedtuple
+Point = namedtuple('Point', ['x', 'y'])
+
+# Create an instance
+p = Point(10, 20)
+
+# Replace a field value
+p2 = p._replace(x=30)
+
+# Access fields
+print("p2.x:", p2.x)
+print("p2.y:", p2.y)
+```
+
+### The _asdict() method
+The _asdict() method is used to convert the namedtuple into a regular dictionary. This function returns the OrderedDict() as constructed from the mapped values of namedtuple().
+
+```py
+
+from collections import namedtuple
+
+# Define a namedtuple
+Point = namedtuple('Point', ['x', 'y'])
+
+# Create an instance
+p = Point(10, 20)
+
+# Convert to dictionary
+d = p._asdict()
+print(d)
+
+#Output
+{'x': 10, 'y': 20}
+```
+
+The _make() method
+The _make() method is used to create a new instance of the namedtuple from an iterable (like a list or a tuple).
+
+
+## Ref https://www.tutorialspoint.com/python/python_namedtuple.htm

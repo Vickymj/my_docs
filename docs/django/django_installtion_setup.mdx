@@ -1,0 +1,112 @@
+---
+id: django_installtion_setup
+title: Django - Installation & Setup
+---
+
+### 1️⃣ Install Django and DRF
+```cmd
+pip install django
+pip install djangorestframework
+```
+### 2️⃣ Django Basic Commands
+#### Create the project 
+
+```bash
+django-admin startproject projectname .
+```
+
+#### Run the Django Project
+
+```cmd
+python manage.py runserver
+```
+#### Create App
+```cmd
+python manage.py startapp app_name
+```
+
+#### migration cmds
+
+```cmd
+python manage.py makemigrations
+python manage.py migrate
+```
+
+#### Create SuperUser
+
+```cmd
+python manage.py createsuperuser
+```
+
+
+### Django Apps Setup 
+#### Creat App
+```cmd
+python manage.py startapp app_name
+```
+
+#### Register the app in `settings.py`
+```py
+INSTALLED_APPS = [
+	...
+	'app_name',
+]
+```
+
+#### Write the endpoints on Views.py
+```py
+from django.shortcuts import render
+from django.http import HttpResponse
+
+def main(request):
+    return HttpResponse("Hello world!")
+```
+
+#### Django URLs
+### Create URLs file
+Create a file named urls.py in the same folder as the views.py file, and type this code in it:
+```py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('/', views.main, name='main'),
+]
+```
+
+#### Add Routings
+Create the routing from project URLs.py using `include`
+
+```
+from django.contrib import admin
+from django.urls import include, path
+
+urlpatterns = [
+    path('', include('app_name.urls')),
+    path('admin/', admin.site.urls),
+]
+```
+
+
+### models
+#### Create Models
+
+```py
+from django.db import models
+
+class Member(models.Model):
+  firstname = models.CharField(max_length=255)
+  lastname = models.CharField(max_length=255)
+```
+#### Register Model with Admin 
+
+```py
+
+# app_name/admin.py
+from django.contrib import admin
+from .models import MyModel
+
+admin.site.register(MyModel)
+
+```
+

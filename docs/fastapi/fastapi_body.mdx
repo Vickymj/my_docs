@@ -1,0 +1,258 @@
+---
+id: fastapi_body
+title: FastAPI - Body
+---
+
+# FastAPI Request Body
+
+FastAPI automatically validates, converts, and documents request body data using Pydantic models.
+
+---
+
+# Multiple Body Parameters
+
+You can send multiple objects inside a single request body.
+
+```python
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+app = FastAPI()
+
+
+class Item(BaseModel):
+    name: str
+    price: float
+
+
+class User(BaseModel):
+    username: str
+    full_name: str | None = None
+
+
+@app.put("/items/{item_id}")
+async def update_item(
+    item_id: int,
+    item: Item,
+    user: User
+):
+    return {
+        "item_id": item_id,
+        "item": item,
+        "user": user
+    }
+```
+
+## Example Request Body
+
+```json
+{
+  "item": {
+    "name": "Laptop",
+    "price": 50000
+  },
+  "user": {
+    "username": "john",
+    "full_name": "John Doe"
+  }
+}
+```
+
+---
+
+# Singular Values in Body
+
+You can also declare individual values directly in the request body using `Body()`.
+
+```python
+from typing import Annotated
+from fastapi import Body
+
+@app.put("/items/{item_id}")
+async def update_item(
+    item_id: int,
+    item: Item,
+    user: User,
+    importance: Annotated[int, Body()]
+):
+    return {
+        "importance": importance
+    }
+```
+
+---
+
+# Body + Query Parameters
+
+FastAPI can combine request body parameters with query parameters.
+
+```python
+from typing import Annotated
+from fastapi import Body
+
+@app.put("/items/{item_id}")
+async def update_item(
+    *,
+    item_id: int,
+    item: Item,
+    user: User,
+    importance: Annotated[int, Body(gt=0)],
+    q: str | None = None,
+):
+    return {
+        "item_id": item_id,
+        "q": q
+    }
+```
+
+---
+
+# Embed Body Parameters
+
+Using `embed=True` wraps the model inside another key.
+
+```python
+from typing import Annotated
+from fastapi import Body
+
+@app.put("/items/{item_id}")
+async def update_item(
+    item_id: int,
+    item: Annotated[Item, Body(embed=True)]
+):
+    return {
+        "item_id": item_id,
+        "item": item
+    }
+```
+
+## Request Body Format
+
+```json
+{
+  "item": {
+    "name": "Foo",
+    "description": "The pretender",
+    "price": 42.0,
+    "tax": 3.2
+  }
+}
+```
+
+---
+
+# Field Validation
+
+```python
+from pydantic import BaseModel, Field
+
+
+class Item(BaseModel):
+    name: str
+
+    description: str | None = Field(
+        default=None,
+        title="The description of the item",
+        max_length=300
+    )
+
+    price: float = Field(
+        gt=0,
+        description="Price must be greater than zero"
+    )
+
+    tax: float | None = None
+```
+
+---
+
+# Nested Models
+
+```python
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+app = FastAPI()
+
+
+class Image(BaseModel):
+    url: str
+    name: str
+
+
+class Item(BaseModel):
+    name: str
+    description: str | None = None
+    price: float
+    tax: float | None = None
+    tags: set[str] = set()
+    image: Image | None = None
+
+
+@app.put("/items/{item_id}")
+async def update_item(item_id: int, item: Item):
+    results = {
+        "item_id": item_id,
+        "item": item
+    }
+    return results
+```
+
+## Example Request Body
+
+```json
+{
+  "name": "Laptop",
+  "description": "Gaming Laptop",
+  "price": 65000,
+  "tax": 2000,
+  "tags": ["electronics", "gaming"],
+  "image": {
+    "url": "https://example.com/image.png",
+    "name": "Laptop Image"
+  }
+}
+```
+
+---
+
+# Extra Data Types
+
+| Type | Purpose |
+|---|---|
+| `datetime` | Date and time |
+| `time` | Time only |
+| `timedelta` | Duration |
+| `UUID` | Unique identifiers |
+
+```python
+from datetime import datetime, time, timedelta
+from typing import Annotated
+from uuid import UUID
+
+from fastapi import Body, FastAPI
+
+app = FastAPI()
+
+
+@app.put("/items/{item_id}")
+async def read_items(
+    item_id: UUID,
+    start_datetime: Annotated[datetime, Body()],
+    end_datetime: Annotated[datetime, Body()],
+    process_after: Annotated[timedelta, Body()],
+    repeat_at: Annotated[time | None, Body()] = None,
+):
+    start_process = start_datetime + process_after
+    duration = end_datetime - start_process
+
+    return {
+        "item_id": item_id,
+        "start_datetime": start_datetime,
+        "end_datetime": end_datetime,
+        "process_after": process_after,
+        "repeat_at": repeat_at,
+        "start_process": start_process,
+        "duration": duration,
+    }
+```

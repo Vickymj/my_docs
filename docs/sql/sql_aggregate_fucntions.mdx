@@ -1,0 +1,68 @@
+---
+id : sql_aggregate_fucntions
+title : SQL - Aggregate Functions
+---
+
+
+- a function that performs a calculation and returns a single value
+- Aggregate functions are often used with the GROUP BY clause of the SELECT statement.
+The most commonly used SQL aggregate functions are:
+
+- `MIN()` - returns the smallest value of a column
+- `MAX()` - returns the largest value of a column
+- `COUNT()` - returns the number of rows in a set
+- `SUM()` - returns the sum of a numerical column
+- `AVG()` - returns the average value of a numerical column
+
+Aggregate functions ignore null values (except for COUNT(*)).
+
+### SQL MIN() Function
+- The `MIN()` function returns the smallest value of the selected column.
+- The `MIN()` function works with numeric, string, and date data types.
+
+```sql
+SELECT MIN(column_name)
+FROM table_name
+WHERE condition;
+```
+Set Column Name (Alias)
+```sql
+SELECT MIN(Price) AS SmallestPrice, CategoryID
+FROM Products
+GROUP BY CategoryID;
+```
+### SQL MAX() Function
+- The `MAX()` function returns the largest value of the selected column.
+- The `MAX()` function works with numeric, string, and date data types.
+
+```sql
+SELECT MAX(column_name) FROM table_name WHERE condition;
+```
+
+### SQL COUNT() Function
+The `COUNT()` function returns the number of rows that matches a specified criterion.
+```sql
+SELECT COUNT([DISTINCT] column_name | *) FROM table_name
+WHERE condition;
+```
+
+The behavior of `COUNT()` depends on the argument used within the parentheses:
+
+- `COUNT(*)` - Counts the total number of rows in a table (including NULL values).
+- `COUNT(columnname)` - Counts all non-null values in the column.
+- `COUNT(DISTINCT columnname)` - Counts only the unique, non-null values in the column.
+
+### SQL SUM() Function
+- The `SUM()` function is used to calculate the total sum of values within a numeric column.
+- The `SUM()` function ignores NULL values in the column.
+```sql
+SELECT SUM(column_name)
+FROM table_name
+WHERE condition;
+```
+### SQL AVG() Function
+- The `AVG()` function returns the average value of a numeric column.
+- The `AVG()` function ignores NULL values in the column.
+```sql
+SELECT AVG(Price) FROM Products;
+```

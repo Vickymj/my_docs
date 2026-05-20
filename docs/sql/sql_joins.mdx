@@ -1,0 +1,115 @@
+---
+id : sql_joins
+title : SQL - Joins
+---
+
+The JOIN clause is used to combine rows from two or more tables, based on a related column between them.
+
+different types of JOINs in SQL:
+
+- `(INNER) JOIN:` Returns only rows that have matching values in both tables
+- `LEFT (OUTER) JOIN:` Returns all rows from the left table, and only the matched rows from the right table
+- `RIGHT (OUTER) JOIN:` Returns all rows from the right table, and only the matched rows from the left table
+- `FULL (OUTER) JOIN:` Returns all rows when there is a match in either the left or right table
+
+### SQL INNER JOIN
+use just JOIN instead of INNER JOIN, as INNER is the default join type
+
+```sql
+SELECT column_name(s)
+FROM table1
+INNER JOIN table2
+ON table1.column_name = table2.column_name;
+```
+JOIN Multiple Tables
+```sql
+SELECT Orders.OrderID, Customers.CustomerName, Shippers.ShipperName
+FROM Orders
+INNER JOIN Customers ON Orders.CustomerID = Customers.CustomerID
+INNER JOIN Shippers ON Orders.ShipperID = Shippers.ShipperID;
+```
+
+### SQL LEFT JOIN
+The `LEFT JOIN` returns all rows from the left table (table1), and only the matched rows from the right table (table2).
+
+If there is no match in the right table, the result for the columns from the right table will be NULL.
+
+The `LEFT JOIN` and `LEFT OUTER JOIN` keywords are equal - the `OUTER` keyword is optional.
+
+
+```sql
+SELECT column_name(s)
+FROM table1
+LEFT JOIN table2
+ON table1.column_name = table2.column_name;
+```
+
+### SQL RIGHT JOIN
+The RIGHT JOIN and RIGHT OUTER JOIN keywords are equal - the OUTER keyword is optional.
+```sql
+SELECT column_name(s)
+FROM table1
+RIGHT JOIN table2
+ON table1.column_name = table2.column_name; 
+```
+
+### SQL FULL JOIN
+The FULL JOIN returns all rows when there is a match in either the left or right table.
+The FULL JOIN and FULL OUTER JOIN keywords are equal - the OUTER keyword is optional.
+
+```sql
+SELECT column_name(s)
+FROM table1
+FULL JOIN table2
+ON table1.column_name = table2.column_name
+WHERE condition;
+```
+### SQL Self Join
+A self join is a regular join, but the table is joined with itself
+```sql
+SELECT column_name(s)
+FROM table1 T1, table1 T2
+WHERE condition;
+```
+Example :
+```sql
+SELECT A.CustomerName AS CustomerName1, B.CustomerName AS CustomerName2, A.City
+FROM Customers A, Customers B
+WHERE A.CustomerID <> B.CustomerID
+AND A.City = B.City
+ORDER BY A.City;
+```
+
+
+
+### SQL - DELETE JOIN
+```sql
+DELETE table1, table2
+FROM table1 JOIN table2
+ON table1.common_field = table2.common_field
+WHERE table2.some_column = 'value';
+```
+Example
+```sql
+DELETE a
+FROM CUSTOMERS AS a INNER JOIN ORDERS AS b
+ON a.ID = b.CUSTOMER_ID
+WHERE a.SALARY < 2000.00;
+
+```
+
+### SQL - UPDATE JOIN Statement
+```sql
+UPDATE table1
+JOIN table2 ON table1.common_field = table2.common_field
+SET table1.column_to_update = table2.column_value
+WHERE table2.some_column = 'value';
+```
+Example
+```sql
+UPDATE CUSTOMERS 
+LEFT JOIN ORDERS 
+ON CUSTOMERS.ID = ORDERS.CUSTOMER_ID 
+SET CUSTOMERS.SALARY = CUSTOMERS.SALARY + 1000 
+WHERE ORDERS.CUSTOMER_ID = 3;
+```

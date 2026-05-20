@@ -5,9 +5,16 @@ import type * as Preset from '@docusaurus/preset-classic';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'My Site',
-  tagline: 'Dinosaurs are cool',
+  title: 'Sheet Cheat',
+  tagline: 'My Reference',
   favicon: 'img/favicon.ico',
+ // Add Mermaid theme here
+  themes: ['@docusaurus/theme-mermaid'],
+
+  // Enable Mermaid in Markdown/MDX
+  markdown: {
+    mermaid: true,
+  },
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
@@ -76,15 +83,17 @@ const config: Config = {
     },
      navbar: {
       title: 'Sheet Cheat',
-      logo: {
-        alt: 'My Site Logo',
-        src: 'img/logo.svg', // Update with your own logo
-      },
+      // logo: {
+      //   alt: 'My Site Logo',
+      //   src: 'img/logo.svg', // Update with your own logo
+      // },
       items: [
         { to: '/docs/commons/intro', label: 'Docs', position: 'left' },
         { to: '/docs/python/python_intro', label: 'Python', position: 'left' },
-        { to: '/docs/fastapi/fastapi_basic', label: 'FastAPI', position: 'left' },
-        { to: '/docs/sql/sql_intro', label: 'SQL', position: 'left' },
+        { to: '/docs/fastapi/fastapi_intro', label: 'FastAPI', position: 'left' },
+        { to: '/docs/flask/flask_basic_CRUD', label: 'Flask', position: 'left' },
+        { to: '/docs/django/django_installtion_setup', label: 'django', position: 'left' },
+        { to: '/docs/sql/sql_basic_CRUD', label: 'SQL', position: 'left' },
         { to: '/docs/docker/docker_intro', label: 'Docker', position: 'left' },
         {
           href: 'https://github.com/facebook/docusaurus',
@@ -141,9 +150,12 @@ const config: Config = {
     // },
     prism: {
       theme: prismThemes.github,
+      
       darkTheme: prismThemes.dracula,
     },
   } satisfies Preset.ThemeConfig,
 };
 
 export default config;
+
+

@@ -1,0 +1,197 @@
+---
+id: python_dictionaries
+title: Python - Dictionaries
+---
+
+## Python - Dictionaries
+
+| Topic | Description | Example |
+|---|---|---|
+| **Creating Dictionary Using Curly Braces** | Creates a dictionary using `{}` syntax. | `student = {"name": "John", "age": 20}` |
+| **Creating Dictionary Using dict() Function** | Creates a dictionary using `dict()` constructor. | `student = dict(name="John", age=20)` |
+
+---
+
+## Accessing Dictionary Items
+
+| Method | Description | Example |
+|---|---|---|
+| **Using Square Brackets []** | Accesses value using key. | `student["name"]` |
+| **Using get() Method** | Returns value safely without error if key not found. | `student.get("name")` |
+
+---
+
+## Modifying Dictionary Items
+
+| Method | Description | Example |
+|---|---|---|
+| **Modify Existing Value** | Changes value of existing key. | `student["age"] = 25` |
+| **update() Method** | Updates multiple key-value pairs. | `student.update({"city":"NY"})` |
+| **Conditional Modification** | Modifies value based on condition. | `if "age" in student:` |
+| **Add New Key-Value Pair** | Adds new item into dictionary. | `student["course"] = "Python"` |
+| **Using setdefault()** | Adds key with default value if missing. | `student.setdefault("marks", 0)` |
+
+---
+
+## Removing Dictionary Items
+
+| Method | Description | Example |
+|---|---|---|
+| **Using del Keyword** | Removes item using key. | `del student["age"]` |
+| **Using pop() Method** | Removes specified key and returns value. | `student.pop("age")` |
+| **Using popitem() Method** | Removes last inserted item. | `student.popitem()` |
+| **Using clear() Method** | Removes all items from dictionary. | `student.clear()` |
+
+---
+
+## Iterating Through a Dictionary
+
+| Method | Description | Example |
+|---|---|---|
+| **Loop Through Keys** | Iterates through keys. | `for key in d:` |
+| **Loop Through Values** | Iterates through values. | `for value in d.values():` |
+| **Loop Through Key-Value Pairs** | Iterates through both keys and values. | `for k,v in d.items():` |
+
+---
+
+## Properties of Dictionary Keys
+
+| Property | Description |
+|---|---|
+| **No Duplicate Keys** | Duplicate keys are not allowed in dictionaries. |
+| **Keys Must Be Immutable** | Keys must be immutable types like string, number, or tuple. |
+
+---
+
+## Python Dictionary Operators
+
+```py
+d1 = {'a': 2, 'b': 4, 'c': 30}
+d2 = {'a1': 20, 'b1': 40, 'c1': 60}
+
+```
+| Operator          | Description                                      | Example          |
+| ----------------- | ------------------------------------------------ | ---------------- |
+| `dict[key]`       | Extract/assign value mapped with key.            | `print(d1['b'])` |
+| `dict1 \| dict2`  | Union of two dictionaries.                       | `d3 = d1 \| d2`  |
+| `dict1 \|= dict2` | Updates first dictionary with second dictionary. | `d1 \|= d2`      |
+
+## Python Dictionary Methods
+| Sr.No | Method                          | Description                                       |
+| ----- | ------------------------------- | ------------------------------------------------- |
+| 1     | `dict.clear()`                  | Removes all elements from dictionary.             |
+| 2     | `dict.copy()`                   | Returns shallow copy of dictionary.               |
+| 3     | `dict.fromkeys()`               | Creates new dictionary with given keys and value. |
+| 4     | `dict.get(key, default)`        | Returns value for key or default.                 |
+| 5     | `dict.has_key(key)`             | Returns True if key exists.                       |
+| 6     | `dict.items()`                  | Returns key-value pairs.                          |
+| 7     | `dict.keys()`                   | Returns all dictionary keys.                      |
+| 8     | `dict.setdefault(key, default)` | Inserts key with default value if missing.        |
+| 9     | `dict.update(dict2)`            | Adds items from another dictionary.               |
+| 10    | `dict.values()`                 | Returns all dictionary values.                    |
+
+
+## Built-in Functions with Dictionaries
+| Sr.No | Function            | Description                              |
+| ----- | ------------------- | ---------------------------------------- |
+| 1     | `cmp(dict1, dict2)` | Compares two dictionaries.               |
+| 2     | `len(dict)`         | Returns number of items in dictionary.   |
+| 3     | `str(dict)`         | Returns printable string representation. |
+| 4     | `type(variable)`    | Returns variable type.                   |
+
+## Python - Access Dictionary Items
+| Method                              | Description                               | Example                |
+| ----------------------------------- | ----------------------------------------- | ---------------------- |
+| **Using Square Brackets []**        | Access value directly using key.          | `d["name"]`            |
+| **Using get() Method**              | Returns value safely.                     | `d.get("name")`        |
+| **Using Loops**                     | Access items using iteration.             | `for k,v in d.items()` |
+| **Using keys(), values(), items()** | Access keys, values, or pairs separately. | `d.keys()`             |
+
+## Python - Change Dictionary Items
+| Method                        | Description                       | Example                     |
+| ----------------------------- | --------------------------------- | --------------------------- |
+| **Modify Dictionary Values**  | Changes existing value.           | `d["age"] = 30`             |
+| **update() Method**           | Updates multiple values.          | `d.update({"city":"LA"})`   |
+| **Conditional Modification**  | Changes value based on condition. | `if "age" in d:`            |
+| **Add New Key-Value Pair**    | Adds new key-value pair.          | `d["course"] = "Python"`    |
+| **Using Assignment Operator** | Assigns value directly.           | `d["marks"] = 90`           |
+| **Using setdefault() Method** | Adds key if not exists.           | `d.setdefault("grade","A")` |
+| **Using del Statement**       | Removes key-value pair.           | `del d["age"]`              |
+| **Using pop() Method**        | Removes specified key.            | `d.pop("age")`              |
+| **Using popitem() Method**    | Removes last inserted item.       | `d.popitem()`               |
+
+## Python - Add Dictionary Items
+| Method                    | Description                             | Example                     |             |
+| ------------------------- | --------------------------------------- | --------------------------- | ----------- |
+| **Using Square Brackets** | Adds item directly.                     | `d["city"] = "NY"`          |             |
+| **Using update() Method** | Adds multiple items.                    | `d.update({"age":20})`      |             |
+| **Using Comprehension**   | Creates dictionary dynamically.         | `{x:x*x for x in range(5)}` |             |
+| **Using Unpacking**       | Merges dictionaries.                    | `{**d1, **d2}`              |             |
+| **Using Union Operator**  | Combines dictionaries.                  | `d1 \| d2`                  |             |
+| **Using                   | = Operator**                            | Updates dictionary.         | `d1 \|= d2` |
+| **Using setdefault()**    | Adds key with default value.            | `d.setdefault("marks",0)`   |             |
+| **Using defaultdict()**   | Creates dictionary with default values. | `defaultdict(list)`         |             |
+
+## Python - Remove Dictionary Items
+| Method                             | Description                  | Example                                |
+| ---------------------------------- | ---------------------------- | -------------------------------------- |
+| **Using del Keyword**              | Deletes key-value pair.      | `del d["name"]`                        |
+| **Using pop() Method**             | Removes item by key.         | `d.pop("age")`                         |
+| **Using popitem() Method**         | Removes last item.           | `d.popitem()`                          |
+| **Using clear() Method**           | Removes all items.           | `d.clear()`                            |
+| **Using Dictionary Comprehension** | Removes items conditionally. | `{k:v for k,v in d.items() if v > 10}` |
+
+## Python - Dictionary View Objects
+| Method       | Description                | Example      |
+| ------------ | -------------------------- | ------------ |
+| **items()**  | Returns key-value pairs.   | `d.items()`  |
+| **keys()**   | Returns dictionary keys.   | `d.keys()`   |
+| **values()** | Returns dictionary values. | `d.values()` |
+
+## Python - Loop Dictionaries
+| Method                  | Description                       | Example                |
+| ----------------------- | --------------------------------- | ---------------------- |
+| **Using for Loop**      | Iterates through keys.            | `for key in d:`        |
+| **Using dict.items()**  | Iterates through key-value pairs. | `for k,v in d.items()` |
+| **Using dict.keys()**   | Iterates through keys.            | `for k in d.keys()`    |
+| **Using dict.values()** | Iterates through values.          | `for v in d.values()`  |
+
+## Python - Copy Dictionaries
+| Method                  | Description                          | Example            |
+| ----------------------- | ------------------------------------ | ------------------ |
+| **Shallow Copy**        | Copies references only.              | `d.copy()`         |
+| **Using copy() Method** | Creates shallow copy.                | `new_d = d.copy()` |
+| **Using dict() Method** | Creates dictionary copy.             | `new_d = dict(d)`  |
+| **Deep Copy**           | Creates completely independent copy. | `copy.deepcopy(d)` |
+
+## Python - Nested Dictionaries
+| Method                          | Description                            | Example                        |
+| ------------------------------- | -------------------------------------- | ------------------------------ |
+| **Direct Assignment**           | Creates nested dictionary directly.    | `emp = {"e1":{"name":"John"}}` |
+| **Using Loop**                  | Creates nested dictionary dynamically. | `for i in range(3):`           |
+| **Adding Items**                | Adds new nested items.                 | `emp["e2"] = {"name":"Sam"}`   |
+| **Accessing Using Indexing**    | Access nested values directly.         | `emp["e1"]["name"]`            |
+| **Using get() Method**          | Safely access nested values.           | `emp.get("e1")`                |
+| **Deleting Nested Dictionary**  | Removes nested dictionary item.        | `del emp["e1"]`                |
+| **Iterating Nested Dictionary** | Loops through nested dictionaries.     | `for k,v in emp.items()`       |
+
+
+## Python - Dictionary Methods
+| Sr.No | Method              | Description                                 |
+| ----- | ------------------- | ------------------------------------------- |
+| 1     | `dict.clear()`      | Removes all elements of dictionary.         |
+| 2     | `dict.copy()`       | Returns shallow copy of dictionary.         |
+| 3     | `dict.fromkeys()`   | Creates dictionary from sequence of keys.   |
+| 4     | `dict.get()`        | Returns value for key or default.           |
+| 5     | `dict.has_key()`    | Checks whether key exists.                  |
+| 6     | `dict.items()`      | Returns key-value pairs.                    |
+| 7     | `dict.keys()`       | Returns dictionary keys.                    |
+| 8     | `dict.pop()`        | Removes specified key.                      |
+| 9     | `dict.popitem()`    | Removes last inserted item.                 |
+| 10    | `dict.setdefault()` | Adds key with default value if missing.     |
+| 11    | `dict.update()`     | Updates dictionary with another dictionary. |
+| 12    | `dict.values()`     | Returns dictionary values.                  |
+
+## Listing All Dictionary Methods
+print(dir(dict))
+print(help(dict.get))

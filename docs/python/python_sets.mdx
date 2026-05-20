@@ -1,0 +1,180 @@
+---
+id: python_sets
+title: Python - Sets
+---
+
+# Python - Sets
+
+| Topic | Description | Example |
+|---|---|---|
+| **Creating a Set Using Curly Braces** | Creates a set using `{}` syntax. | `my_set = {1, 2, 3}` |
+| **Creating a Set Using set() Function** | Creates a set using the `set()` constructor. | `my_set = set([1,2,3])` |
+| **Adding Elements Using add()** | Adds a single element into a set. | `my_set.add(4)` |
+| **Removing Elements Using remove()** | Removes an element from a set. Raises error if item not found. | `my_set.remove(2)` |
+| **Removing Elements Using discard()** | Removes an element safely without error. | `my_set.discard(2)` |
+| **Membership Testing** | Checks whether an item exists in a set. | `2 in my_set` |
+| **Union Operation** | Combines all unique elements from sets. | `A \| B` |
+| **Intersection Operation** | Returns common elements between sets. | `A & B` |
+| **Difference Operation** | Returns elements present only in first set. | `A - B` |
+| **Symmetric Difference Operation** | Returns uncommon elements from sets. | `A ^ B` |
+
+---
+
+# Python Set Comprehensions
+
+| Method | Description | Example |
+|---|---|---|
+| **Basic Set Comprehension** | Creates a set using comprehension syntax. | `{x for x in range(5)}` |
+| **Filtering Elements** | Filters elements using condition. | `{x for x in range(10) if x % 2 == 0}` |
+| **Nested Set Comprehension** | Uses nested loops inside comprehension. | `{y for x in [[1,2],[3,4]] for y in x}` |
+
+---
+
+# Frozen Sets
+
+| Method | Description | Example |
+|---|---|---|
+| **Creating Frozen Set** | Creates immutable set using `frozenset()`. | `frozenset([1,2,3])` |
+| **Frozen Set Limitation** | Frozen sets cannot be modified. | `my_frozen_set.add(4)` |
+
+---
+
+# Access Set Items
+
+| Method | Description | Example |
+|---|---|---|
+| **Access Using For Loop** | Iterates through set items. | `for x in my_set:` |
+| **Access Using List Comprehension** | Converts set items into list. | `[x for x in my_set]` |
+| **Access Subset From a Set** | Creates subset using condition. | `{x for x in my_set if x < 5}` |
+
+---
+
+# Checking if Set Item Exists
+
+| Method | Description | Example |
+|---|---|---|
+| **Membership Operator** | Checks whether item exists in set. | `"apple" in fruits` |
+
+---
+
+# Python - Add Set Items
+
+| Method | Description | Example |
+|---|---|---|
+| **add() Method** | Adds one item to set. | `my_set.add(5)` |
+| **update() Method** | Adds multiple items into set. | `my_set.update([4,5])` |
+| **Adding Sequence Objects** | Adds items from tuple/list/string. | `my_set.update((1,2))` |
+| **Union Operator** | Adds elements using union operation. | `A \| B` |
+| **Set Comprehension** | Dynamically creates updated set. | `{x*2 for x in my_set}` |
+
+---
+
+# Python - Remove Set Items
+
+| Method | Description | Example |
+|---|---|---|
+| **remove() Method** | Removes item from set. | `my_set.remove(2)` |
+| **discard() Method** | Removes item safely. | `my_set.discard(2)` |
+| **pop() Method** | Removes random item. | `my_set.pop()` |
+| **clear() Method** | Removes all items. | `my_set.clear()` |
+| **intersection() Method** | Returns common items. | `A.intersection(B)` |
+| **Symmetric Difference Update** | Updates with uncommon elements. | `A.symmetric_difference_update(B)` |
+
+---
+
+# Python - Loop Sets
+
+| Method | Description | Example |
+|---|---|---|
+| **For Loop** | Iterates through set items. | `for x in my_set:` |
+| **While Loop** | Uses list conversion with index. | `while i < len(lst):` |
+| **Set Comprehension** | Iterates using comprehension. | `{print(x) for x in my_set}` |
+| **enumerate() Function** | Returns index and value. | `for i, x in enumerate(my_set):` |
+| **add() Method in Loop** | Adds items while looping. | `new_set.add(x)` |
+
+---
+
+# Python - Join Sets
+
+| Method | Description | Example |
+|---|---|---|
+| **Using "|" Operator** | Combines two sets. | `A \| B` |
+| **union() Method** | Returns combined set. | `A.union(B)` |
+| **update() Method** | Updates original set. | `A.update(B)` |
+| **Unpacking Operator** | Uses unpacking for merging. | `{*A, *B}` |
+| **Set Comprehension** | Joins using comprehension. | `{x for s in [A,B] for x in s}` |
+| **Iterative Addition** | Adds items one by one. | `for x in B: A.add(x)` |
+
+---
+
+# Python - Copy Sets
+
+| Method | Description | Example |
+|---|---|---|
+| **copy() Method** | Creates shallow copy. | `new_set = my_set.copy()` |
+| **set() Function** | Creates copy using constructor. | `new_set = set(my_set)` |
+| **Set Comprehension** | Creates copy dynamically. | `{x for x in my_set}` |
+
+---
+
+# Python - Set Operators
+
+| Operator | Description | Example |
+|---|---|---|
+| `\|` | Union Operator | `{1,2} \| {2,3}` |
+| `&` | Intersection Operator | `{1,2} & {2,3}` |
+| `-` | Difference Operator | `{1,2,3} - {3}` |
+| `^` | Symmetric Difference Operator | `{1,2,3} ^ {3,4}` |
+| `<=` | Subset Testing | `A <= B` |
+
+---
+
+# Adding and Removing Elements
+
+| Sr.No | Methods with Description |
+|---|---|
+| 1 | `set.add()` - Add an element to a set. |
+| 2 | `set.clear()` - Remove all elements from a set. |
+| 3 | `set.copy()` - Return a shallow copy of a set. |
+| 4 | `set.discard()` - Remove an element if it exists. |
+| 5 | `set.pop()` - Remove and return an arbitrary element. |
+| 6 | `set.remove()` - Remove an element from a set. |
+
+---
+
+# Set Operations
+
+| Sr.No | Methods with Description |
+|---|---|
+| 1 | `set.update()` - Update a set with union of others. |
+| 2 | `set.difference_update()` - Remove elements found in another set. |
+| 3 | `set.intersection()` - Return intersection of sets. |
+| 4 | `set.intersection_update()` - Update set with intersection result. |
+| 5 | `set.isdisjoint()` - Return True if sets have no common elements. |
+| 6 | `set.issubset()` - Return True if set is subset of another. |
+| 7 | `set.issuperset()` - Return True if set contains another set. |
+| 8 | `set.symmetric_difference()` - Return symmetric difference. |
+| 9 | `set.symmetric_difference_update()` - Update set with symmetric difference. |
+| 10 | `set.union()` - Return union of sets. |
+| 11 | `set.difference()` - Return difference of sets. |
+
+---
+
+# Built-in Functions with Sets
+
+| Sr.No | Function & Description | Example |
+|---|---|---|
+| 1 | `len(set)` - Returns total number of items. | `len({1,2,3}) → 3` |
+| 2 | `max(set)` - Returns largest item. | `max({1,5,3}) → 5` |
+| 3 | `min(set)` - Returns smallest item. | `min({1,5,3}) → 1` |
+| 4 | `sum(set)` - Returns sum of items. | `sum({1,2,3}) → 6` |
+| 5 | `sorted(set)` - Returns sorted list. | `sorted({3,1,2}) → [1,2,3]` |
+
+---
+
+# Listing All Set Methods
+
+```py
+print(dir(set))
+print(help(set.add))
+```
